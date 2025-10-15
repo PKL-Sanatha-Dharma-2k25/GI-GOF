@@ -308,7 +308,7 @@ document.addEventListener('click', function(e) {
                         cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.open(`/printISO/${idPrint}`, '_blank');
+                            window.open(`{{ url('printISO') }}/${idPrint}`, '_blank')
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
