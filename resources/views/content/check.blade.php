@@ -44,12 +44,12 @@
                                 </th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">Reviewer(GA)</th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">GA Notes</th>
-                                <th id="th_action " class="text-center cursor-pointer hover:bg-gray-100">Action</th>
+                                <th class="th_action text-center cursor-pointer hover:bg-gray-100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($permohonans as $permohonan)
-                            <tr>
+                            <tr data-status-id="{{ $permohonan->status_id }}">
                                 <td class="text-center">{{ $permohonan->no_permohonan }}</td>
                                 <td>
                                     <div class="flex flex-col gap-1">
@@ -92,13 +92,12 @@
                                 </td>
                                 <td class="text-center">{{ $permohonan->peninjau->username ?? '-' }}</td>
                                 <td class="text-center">{{ $permohonan->catatan_peninjau ?? '-' }}</td>
-                                <td id="" class="text-center">
-                                    <button type="button" id="deleteBtn" class="finished m-4 text-white bg-red-500 btn ">
+                                <td class="td_action text-center">
+                                    <button type="button" id="deleteBtn" data-id="{{ $permohonan->id }}"
+                                        data-url="{{  url('/process/'.$permohonan->id.'/delete') }}"
+                                        class="deleteBtn finished m-4 text-white bg-red-500 btn ">
                                         Delete
                                     </button>
-                                    <script>
-                                        
-                                    </script>
                                 </td>
                             </tr>
                             @endforeach
@@ -125,13 +124,84 @@
     </div>
 </div>
 <script>
-    const deleteBtn = document.getElementById('deleteBtn');
-    deleteBtn.addEventListener('click',function(){
-        
+const deleteButtons = document.querySelectorAll('.deleteBtn');
+deleteButtons.forEach(btn => {
+
+
+    btn.addEventListener('click', function(e) {
+        let id = e.target.dataset.id;
+        let url = e.target.dataset.url;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Application will be deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sure!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Done!',
+                                text: '{{ session("success") }}',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Failed!',
+                                text: '{{ session("error") }}',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                        }
+                        location.reload();
+                })
+            } else if (result.dismiss === Swal.DismissReason
+                .cancel) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Cancelled',
+                    text: 'Application will not be deleted',
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+            }
+            })
+        });
     });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('tr[data-status-id]').forEach(function(row) {
+        let statusId = row.getAttribute('data-status-id');
+        if (statusId !== "1") {
+            let td = row.querySelector('.td_action');
+            let th = row.querySelector('.th_action');
+            if (td) td.style.display = 'none';
+            if (th) th.style.display = 'none';
+        }
+    });
+});
+
+
 $('#myTable').DataTable({
     columnDefs: [
-        
+
     ],
 });
 

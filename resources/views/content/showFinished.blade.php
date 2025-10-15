@@ -228,11 +228,11 @@ document.addEventListener('click', function(e) {
             </div>
             <div class="mb-3">
               <label class="block mb-2 text-base font-medium">Before :</label>
-              <img src="/storage/app/public/${data.foto_sebelum}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md ">
+              <img src="{{asset('/storage/app/public/${data.foto_sebelum}')}}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md ">
             </div>
             <div class="mb-3">
               <label class="block mb-2 text-base font-medium">After:</label>
-              <img src="/storage/app/public/${data.foto_sesudah}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
+              <img src="{{asset('/storage/app/public/${data.foto_sesudah}')}}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
             </div>
             
             <!--<button type="button" id="printBtn" dataset-id="${data.id}" class="finished m-4 text-white bg-green-500 btn ...">Print</button>-->

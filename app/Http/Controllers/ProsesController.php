@@ -250,6 +250,17 @@ class ProsesController extends Controller
         ], 500);
     }
 }
+public function delete(String $id){
+$permohonan = PermohonanModel::find($id);
+
+    if (!$permohonan) {
+        return response()->json(['message' => 'Data tidak ditemukan','success' => false], 404);
+    }
+ 
+    $permohonan->delete();
+
+    return response()->json(['message' => 'Data berhasil dihapus', 'success' => true]);
+}
 public function approve(Request $request)
 { 
     $approved_at = now();

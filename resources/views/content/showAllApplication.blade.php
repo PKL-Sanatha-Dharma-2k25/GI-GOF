@@ -217,7 +217,7 @@ document.addEventListener('click', function(e) {
             <!-- Foto Sebelumnya -->
             <div class="mb-3">
               <label class="block mb-2 text-base font-medium">Attachment :</label>
-              <img src="/storage/app/public/${data.foto_sebelum}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
+              <img src="{{asset('/storage/app/public/${data.foto_sebelum}')}}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
             </div>
             
             

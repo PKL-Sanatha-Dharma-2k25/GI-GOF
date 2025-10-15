@@ -40,6 +40,7 @@ Route::patch('/process/approve',[App\Http\Controllers\ProsesController::class, '
 Route::patch('/process/reject',[App\Http\Controllers\ProsesController::class, 'reject'])->name('process.reject');
 Route::post('/process/addMasterLokasi',[App\Http\Controllers\ProsesController::class, 'addMasterLokasi'])->name('process.addMasterLokasi');
 Route::post('/process/addMasterBarang',[App\Http\Controllers\ProsesController::class, 'addMasterBarang'])->name('process.addMasterBarang');
+Route::delete('/process/{id}/delete', [App\Http\Controllers\ProsesController::class, 'delete']);
 //Route Proses Permohonan
 Route::post('/process/save',[App\Http\Controllers\ProsesController::class, 'simpanPermohonan'])->name('process.simpanPermohonan');
 Route::post('/process/onProgress',[App\Http\Controllers\ProsesController::class, 'updateOnProgress'])->name('process.onProgress');
