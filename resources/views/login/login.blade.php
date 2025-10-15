@@ -4,20 +4,20 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sign In | GI-RR</title>
+    <title>Sign In | GI-GOF</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta content="Globalindo Report & Repair" name="description">
     <meta content="MIS Team" name="author">
 
     <link rel="shortcut icon" href="{{ asset('public/assets/images/logo/icon.PNG') }}">
     <script src="{{ asset('public/assets/js/layout.js') }}"></script>
-
+    <link href="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('public/assets/css/icons.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/libs/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/libs/choices.js/public/assets/styles/choices.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/css/tailwind2.css') }}">
-
+    <script src="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Lottie Player -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
@@ -57,7 +57,7 @@
                                             {{ session('msgOut') }}
                                         </div>
                                         @endif
-                                         @if (session('msgUp'))
+                                        @if (session('msgUp'))
                                         <div
                                             class="p-3 mb-3 text-base text-blue-500 border border-blue-200 rounded-md bg-blue-50">
                                             {{ session('msgUp') }}
@@ -70,7 +70,7 @@
                                         <label for="username"
                                             class="inline-block mb-2 text-base font-medium">Username</label>
                                         <input type="text" id="username" name="username"
-                                            class="form-input w-full border-slate-200 focus:outline-none focus:border-custom-500 placeholder:text-slate-400" 
+                                            class="form-input w-full border-slate-200 focus:outline-none focus:border-custom-500 placeholder:text-slate-400"
                                             placeholder="Enter username" autofocus required>
                                         <div id="username-error" class="hidden mt-1 text-sm text-red-500">Please enter
                                             username</div>
@@ -82,16 +82,17 @@
                                             class="inline-block mb-2 text-base font-medium">Password</label>
                                         <input type="password" id="password" name="password"
                                             class="form-input w-full border-slate-200 focus:outline-none focus:border-custom-500 placeholder:text-slate-400"
-                                            placeholder="Enter password" required >
+                                            placeholder="Enter password" required>
                                         <div id="password-error" class="hidden mt-1 text-sm text-red-500">Please enter
                                             password</div>
                                     </div>
-                                    
+
                                     <!-- Sign In Button & Create Account Button -->
                                     <div class="mt-10">
                                         Don't have an account?
-                                        <a href="{{ url('/register') }}" class = "font-medium text-sky-500 text-base">Create Account</a>
-                                        <button type="submit"
+                                        <a href="{{ url('/register') }}"
+                                            class="font-medium text-sky-500 text-base">Create Account</a>
+                                        <button type="button" id="btnSignIn"
                                             class="w-full text-white btn bg-custom-500 border-custom-500 hover:bg-custom-600 focus:bg-custom-600 focus:ring focus:ring-custom-100">
                                             Sign In
                                         </button>
@@ -124,8 +125,9 @@
                 <img src="{{ asset('public/assets/images/logo/logo-gi-transparant.png') }}" alt="Logo GI"
                     class="block mx-auto w-20 h-[70px]">
                 <div class="mt-2 text-center">
-                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-RR</h2>
-                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates Report & Repair | MIS
+                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GOF</h2>
+                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Operational
+                        Facility Request and Maintenance | MIS
                         Team </p>
                 </div>
 
@@ -135,7 +137,85 @@
             </div>
         </div>
     </div>
+    <!-- Main JS -->
+    <script>
+    const signInBtn = document.getElementById('btnSignIn');
+    signInBtn.addEventListener('click', function() {
+        let username = document.getElementById('username').value.trim();
+        let pass = document.getElementById('password').value;
+        if (username === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter username first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        } else if (pass === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter password first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
 
+        } else if (pass.length < 6) {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Password min 6 characters!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }
+        let url = "{{ url('/auth/signInValidate') }}";
+        let payload = {
+            username: username,
+            password: pass,
+        };
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+
+                },
+                body: JSON.stringify(payload)
+
+            }).then(response => response.json())
+            .then(data => {
+                if (data.message == "Incorrect password." || data.message ==  "These credentials do not match our records (username not found).") {
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: "Incorrect Password or Username",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ah i forgot, Sure!',
+                    });
+                    return;
+                } else {
+                    document.getElementById('signInForm').submit();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: "You'll be redirecting to dashboard page!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                    });
+                }
+            });
+
+    });
+    </script>
     <!-- JS Libraries -->
     <script src="{{ asset('public/assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/@popperjs/core/umd/popper.min.js') }}"></script>

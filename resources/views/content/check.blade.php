@@ -3,7 +3,7 @@
 <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
     <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
         <div class="grow">
-            <h5 class="text-16">Permohonan Saya</h5>
+            <h5 class="text-16">My Application</h5>
         </div>
         <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
             <li
@@ -11,106 +11,61 @@
                 <a href="dashboard" class="text-slate-400">Dashboard</a>
             </li>
             <li class="text-slate-700">
-                Permohonan Saya
+                My Application
             </li>
         </ul>
     </div>
 
     <div class="card mt-3">
         <div class="card-body">
-           <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800">Daftar Permohonan</h2>
+                    <h2 class="text-lg font-semibold text-gray-800">Application List</h2>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-center table-auto min-w-max" style="width:100%">
+                    <table class="display w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
                         <thead>
                             <tr>
+                                <th class="text-center cursor-pointer hover:bg-gray-100">No Application</th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'nama_item', 'sort_order' => $sortBy == 'nama_item' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Nama Item
-                                        @if($sortBy == 'nama_item')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
+                                    Item Name
                                 </th>
-
-                                <th class="text-center">Foto</th>
-
+                                <th class="text-center max-w-xs">Item Count</th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'kepentingan', 'sort_order' => $sortBy == 'kepentingan' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Kepentingan
-                                        @if($sortBy == 'kepentingan')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
+                                    Urgency
                                 </th>
-
-                                <th class="text-center max-w-xs">Alasan</th>
-
+                                <th class="text-center max-w-xs">Application Type</th>
+                                <th class="text-center max-w-xs">Location</th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'tgl_pengajuan', 'sort_order' => $sortBy == 'tgl_pengajuan' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Tanggal Pengajuan
-                                        @if($sortBy == 'tgl_pengajuan')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
+                                    Application Date
                                 </th>
-
                                 <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'tgl_selesai', 'sort_order' => $sortBy == 'tgl_selesai' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Tanggal Selesai
-                                        @if($sortBy == 'tgl_selesai')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
+                                    Status
                                 </th>
-
-                                <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'est_biaya', 'sort_order' => $sortBy == 'est_biaya' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Estimasi Biaya
-                                        @if($sortBy == 'est_biaya')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
-
-                                <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'akt_biaya', 'sort_order' => $sortBy == 'akt_biaya' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Biaya Aktual
-                                        @if($sortBy == 'akt_biaya')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
-
-                                <th class="text-center cursor-pointer hover:bg-gray-100">
-                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'status', 'sort_order' => $sortBy == 'status' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}"
-                                        class="flex items-center justify-center gap-1">
-                                        Status
-                                        @if($sortBy == 'status')
-                                        <span>{{ $sortOrder == 'asc' ? '↑' : '↓' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
+                                <th class="text-center cursor-pointer hover:bg-gray-100">Reviewer(GA)</th>
+                                <th class="text-center cursor-pointer hover:bg-gray-100">GA Notes</th>
+                                <th id="th_action " class="text-center cursor-pointer hover:bg-gray-100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($permohonans as $permohonan)
                             <tr>
-                                <td class="text-center">{{ $permohonan->nama_item }}</td>
-                                <td class="text-center">
-                                    <img src="{{ asset('storage/'.$permohonan->foto_item_sebelum) }}"
-                                        class="rounded w-20 h-20 object-cover cursor-pointer image-modal mx-auto"
-                                        data-image-url="{{ asset('storage/'.$permohonan->foto_item_sebelum) }}"
-                                        title="Klik untuk memperbesar">
+                                <td class="text-center">{{ $permohonan->no_permohonan }}</td>
+                                <td>
+                                    <div class="flex flex-col gap-1">
+                                        @foreach ($permohonan->barang as $barang)
+                                        <div>{{ $barang->nama_barang }}</div>
+                                        @endforeach
+                                    </div>
                                 </td>
+                                <td>
+                                    <div class="flex flex-col gap-1">
+                                        @foreach ($permohonan->barang as $barang)
+                                        <div>{{ $barang->pivot->jumlah ?? '-'}} pcs</div>
+                                        @endforeach
+                                    </div>
+                                </td>
+
                                 <td class="text-center">
                                     <span class="px-2 py-1 rounded-full text-xs 
                     @if($permohonan->kepentingan == 'Sangat Mendesak') bg-red-100 text-red-800
@@ -119,35 +74,31 @@
                                         {{ $permohonan->kepentingan }}
                                     </span>
                                 </td>
-                                <td class="text-center max-w-xs break-words whitespace-normal px-2 py-3 align-top">
-                                    {{ Str::limit($permohonan->alasan, 100) }}
-                                    @if(strlen($permohonan->alasan) > 100)
-                                    <button class="text-blue-600 text-xs ml-1 read-more"
-                                        data-full-text="{{ $permohonan->alasan }}">
-                                        ...baca selengkapnya
-                                    </button>
-                                    @endif
-                                </td>
+                                <td class="text-center">{{ $permohonan->jenis_permohonan->nama_jenis_permohonan }}</td>
+                                <td class="text-center">{{ $permohonan->lokasi->nama_lokasi }}</td>
                                 <td class="px-4 py-3">
-                                    {{ $permohonan->tgl_pengajuan ? \Carbon\Carbon::parse($permohonan->tgl_pengajuan)->format('Y/m/d') : '-' }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    {{ $permohonan->tgl_selesai ? \Carbon\Carbon::parse($permohonan->tgl_selesai)->format('Y/m/d') : '-' }}
+                                    {{ $permohonan->created_at ? \Carbon\Carbon::parse($permohonan->created_at)->format('Y/m/d H:i:i') : '-' }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $permohonan->est_biaya ? 'Rp ' . number_format($permohonan->est_biaya, 0, ',', '.') : '-' }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $permohonan->akt_biaya ? 'Rp ' . number_format($permohonan->akt_biaya, 0, ',', '.') : '-' }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="px-2 py-1 rounded-full text-xs 
-                    @if($permohonan->status == 'Approved') bg-green-100 text-green-800
-                    @elseif($permohonan->status == 'Pending') bg-blue-100 text-blue-800
-                    @elseif($permohonan->status == 'Rejected') bg-red-100 text-red-800
-                    @else bg-yellow-100 text-yellow-800 @endif">
-                                        {{ $permohonan->status ?? 'Pending' }}
+                                    <span class="px-2 py-1 rounded-full text-xs  
+                    @if($permohonan->status->nama_status == 'Approved') bg-sky-100 text-sky-800
+                    @elseif($permohonan->status->nama_status == 'Pending') bg-yellow-100 text-yellow-800
+                    @elseif($permohonan->status->nama_status == 'Rejected') bg-red-500 text-red-800
+                    @elseif($permohonan->status->nama_status == 'On Progress') bg-orange-300 text-amber-800
+                    @elseif($permohonan->status->nama_status == 'Finished') bg-emerald-100 text-emerald-800
+                    @endif">
+                                        {{ $permohonan->status->nama_status ?? 'Pending' }}
                                     </span>
+                                </td>
+                                <td class="text-center">{{ $permohonan->peninjau->username ?? '-' }}</td>
+                                <td class="text-center">{{ $permohonan->catatan_peninjau ?? '-' }}</td>
+                                <td id="" class="text-center">
+                                    <button type="button" id="deleteBtn" class="finished m-4 text-white bg-red-500 btn ">
+                                        Delete
+                                    </button>
+                                    <script>
+                                        
+                                    </script>
                                 </td>
                             </tr>
                             @endforeach
@@ -159,37 +110,31 @@
     </div>
 </div>
 <!-- MODAL CONTOH -->
-<div id="ModalContoh" modal-center
-    class="fixed flex-col hidden transition-all duration-300 ease-in-out left-2/4 z-drawer -translate-x-2/4 -translate-y-2/4 show">
-    <div class="w-screen lg:w-[55rem] bg-white shadow rounded-md flex flex-col h-full">
+<div id="ModalContoh" class="fixed inset-0 z-drawer flex items-start justify-center pt-10 overflow-y-auto hidden">
+    <div class="bg-white shadow rounded-md w-screen lg:w-[40rem] flex flex-col">
         <div class="flex items-center justify-between p-4 border-b border-slate-200">
-            <h5 class="text-16">List Defect</h5>
-            <button data-modal-close="ModalContoh"
-                class="transition-all duration-200 ease-linear text-slate-500 hover:text-red-500"><i data-lucide="x"
-                    class="size-5"></i></button>
+            <h5 class="text-16">Detail Permohonan</h5>
+            <button onclick="closeAjaxModal()"
+                class="transition-all duration-100 ease-linear text-slate-500 hover:text-red-500">
+                <i data-lucide="x" class="size-5"></i>
+            </button>
         </div>
-        <div class="max-h-[calc(theme('height.screen')_-_180px)] p-4 overflow-y-auto">
-            <div class="grid grid-cols-1 gap-5 md:grid-cols-1 xl:grid-cols-1 mx-5 ">
-                <div class="mb-3">
-                    <label for="inputText" class="inline-block mb-2 text-base font-medium">Text <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="inputText"
-                        class="form-input border-slate-200 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-500 placeholder:text-slate-400"
-                        required>
-                </div>
-                <div>
-                    <label for="textArea" class="inline-block mb-2 text-base font-medium">Example Textarea</label>
-                    <textarea
-                        class="form-input border-slate-200 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-500 placeholder:text-slate-400"
-                        id="textArea" rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="flex items-center justify-between p-4 mt-auto border-t border-slate-200">
+        <div class="p-4 modal-body">
+            <p class="text-gray-500">Loading...</p>
         </div>
     </div>
 </div>
 <script>
+    const deleteBtn = document.getElementById('deleteBtn');
+    deleteBtn.addEventListener('click',function(){
+        
+    });
+$('#myTable').DataTable({
+    columnDefs: [
+        
+    ],
+});
+
 let openModalId = null;
 //  Show Modal
 const toggleElementState = (elementId, show, delay) => {

@@ -9,6 +9,7 @@ class PemohonModel extends Model
 {
     use HasFactory;
         protected $fillable = [
+            'fullname',
         'username',
         'dept_id',
         'role',

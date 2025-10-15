@@ -21,11 +21,10 @@
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
-                    <p class="text-xs text-gray-400 mt-1">*Click on <strong> No Application</strong> to approve/reject
-                        application</p>
+                    <p class="text-xs text-gray-400 mt-1">*Click on <strong> No Application</strong> to open application's details</p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="display w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
+                    <table class="display stripe group w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
                         <thead>
                             <tr>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">No Application</th>
@@ -53,21 +52,18 @@
                             <tr>
                                 <td class="text-center">
                                     <button data-id="{{ $permohonan->id }}"
-                                        data-url="{{ url('/permohonan/'.$permohonan->id.'/detail') }}" 
-                                        style=" text-decoration: underline;color: blue;" 
-                                        class="ajax-modal-btn bg-white-600 text-black btn border-white-600 hover:text-custom-500 hover:bg-custom-200 hover:border-custom-500 focus:text-white focus:bg-custom-300 focus:border-custom-500 focus:ring focus:ring-custom-100 active:text-custom-500 active:bg-custom-300 active:border-custom-500 active:ring active:ring-custom-100">
-                                        {{ $permohonan->no_permohonan }}
-                                </td>
-                                </button>
-                                <td>
-                                    <div class="flex flex-col gap-1">
-                                        @foreach ($permohonan->barang as $barang)
-                                        <div>{{ $barang->nama_barang }}</div>
-                                        @endforeach
-                                    </div>
-                                </td>
-
-
+                                            data-url="{{ url('/permohonan/'.$permohonan->id.'/detail') }}"
+                                            style=" text-decoration: underline;color: blue;"
+                                            class="ajax-modal-btn bg-white-600 text-black btn border-white-600 hover:text-custom-500 hover:bg-custom-200 hover:border-custom-500 focus:text-white focus:bg-custom-300 focus:border-custom-500 focus:ring focus:ring-custom-100 active:text-custom-500 active:bg-custom-300 active:border-custom-500 active:ring active:ring-custom-100">
+                                            {{ $permohonan->no_permohonan }}</td>
+                                        </button>
+                                <td><div class="flex flex-col gap-1">
+                                    @foreach ($permohonan->barang as $barang)
+                                    <div>{{ $barang->nama_barang }}</div>
+                                    @endforeach
+                                </div></td>
+                                
+                                
                                 <td>
                                     <div class="flex flex-col gap-1">
                                         @foreach ($permohonan->barang as $barang)
@@ -133,7 +129,15 @@ $('#myTable').DataTable({
     language: {
         search: "_INPUT_",
         searchPlaceholder: "Search data..."
-    }
+    },
+    layout: {
+        bottomEnd: {
+            paging: {
+                firstLast: false
+            }
+        }
+    },
+    lengthMenu: [10, 25, 50, 100]
 });
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('ajax-modal-btn')) {
@@ -216,173 +220,13 @@ document.addEventListener('click', function(e) {
               <img src="/storage/app/public/${data.foto_sebelum}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
             </div>
             
-            <button type="button" id="approveBtn" data-id="${data.id}" class="m-4 text-white bg-custom-500 btn ...">Approve Application</button>
-            <button type="button" id="rejectBtn" data-id="${data.id}" class="m-4 text-white bg-red-500 btn ...">Reject Application</button>
+            
         </div>
     `;
                 document.getElementById('alasan').innerHTML = data.alasan_permohonan;
 
                 //Approve & Reject button
-                const approveBtn = document.getElementById('approveBtn');
-                const rejectBtn = document.getElementById('rejectBtn');
-
-
-
-
-                // Approve button
-                approveBtn.addEventListener('click', function() {
-                    if (data.status === "Rejected") {
-                        Swal.fire({
-                            title: 'Oops!',
-                            text: "Application has been rejected, please choose another",
-                            icon: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Sure!',
-                        });
-                        return;
-                    }
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "Application will be approved!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Sure!',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            let url = "{{ route('process.approve') }}";
-                            let payload = {
-                                id: approveBtn.dataset.id,
-                                status_id: 2,
-                                peninjau_id: "{{ session('user.id') }}"
-                            };
-                            fetch(url, {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector(
-                                            'meta[name="csrf-token"]').getAttribute(
-                                            'content')
-                                    },
-                                    body: JSON.stringify(payload)
-                                })
-                                .then(res => res.json())
-                                .then(response => {
-                                    if (response.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Done!',
-                                            text: '{{ session("success") }}',
-                                            timer: 2500,
-                                            showConfirmButton: false
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Failed!',
-                                            text: '{{ session("error") }}',
-                                            timer: 2500,
-                                            showConfirmButton: false
-                                        });
-                                    }
-                                    location.reload();
-                                });
-                        } else if (result.dismiss === Swal.DismissReason
-                            .cancel) {
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Cancelled',
-                                text: 'Application will not be approved.',
-                                timer: 2500,
-                                showConfirmButton: false
-                            });
-                        }
-                    });
-
-
-
-                });
-
-                rejectBtn.addEventListener('click', function() {
-                    if (data.status === "Approved") {
-                        Swal.fire({
-                            title: 'Oops!',
-                            text: "Application has been approved, please choose another",
-                            icon: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Sure!',
-                        });
-                        return;
-                    }
-                    document.querySelector('#ModalContoh .modal-body').innerHTML = `
-                    <form id = "submit_GA_note" method="PATCH" action="{{ url('process/reject') }}" >
-                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                      <input type="hidden" name="id" value="${data.id}">
-    <div class="flex items-center gap-4 p-4 border-b border-slate-200">
-    <div class="p-4 border-b border-slate-200>
-     <label class="inline-block mb-2 text-base font-medium">Alasan : <span class="text-red-500">*</span></label>
-    </div>
-            <div class="flex items-center gap-4">
-               <input type="hidden" name="status_id" value="3" id="status_id">
-                <textarea id="alasan" name="catatan_peninjau" class="form-input border-slate-200 ..." placeholder="Masukkan alasan penolakan..."></textarea>
-            </div>
-            
-<div class="flex items-center">
-            <button type="button" id="submitRejectionBtn" data-id="${data.id}" class="m-7 text-white bg-red-500 btn ...">Submit Alasan Penolakan</button>
-        </div>
-        </form>
-    `;
-                    const submitRejectBtn = document.getElementById('submitRejectionBtn');
-                    submitRejectBtn.addEventListener('click', function() {
-                        let note = document.getElementById('alasan').value.trim();
-                        if (note === "" || note === null) {
-                            Swal.fire({
-                                title: 'Oops!',
-                                text: "Please fill rejection note first!",
-                                icon: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'Sure!',
-                            });
-                            return;
-                        }
-                        Swal.fire({
-                            title: 'Are you sure?',
-                            text: "Application will be rejeted!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Sure!',
-                            cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                document.getElementById('submit_GA_note')
-                                    .submit();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Done!',
-                                    text: '{{ session("success") }}',
-                                    timer: 2500,
-                                    showConfirmButton: false
-                                });
-                            } else if (result.dismiss === Swal.DismissReason
-                                .cancel) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'Cancelled',
-                                    text: 'Application will not be rejected.',
-                                    timer: 2500,
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
-                    });
-                });
+               
 
             })
             .catch(error => {

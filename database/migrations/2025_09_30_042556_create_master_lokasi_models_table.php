@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('permohonan_models', function (Blueprint $table) {
-            $table->string('kepentingan')->nullable();
+        Schema::create('master_lokasi_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_lokasi')->unique();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('permohonan_models', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('master_lokasi_models');
     }
 };

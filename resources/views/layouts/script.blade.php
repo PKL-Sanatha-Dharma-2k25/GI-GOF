@@ -7,9 +7,10 @@
 <script src="{{ asset('public/assets/js/tailwick.bundle.js') }}"></script>
 <script src="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('public/assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill/dist/quill.min.js"></script>
 
 <script src="{{ asset('public/assets/libs/flatpickr/flatpickr.min.js') }}"></script>
-
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
 <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
 <!--buttons dataTables-->
 <script src="{{ asset('public/assets/js/datatables/datatables.buttons.min.js') }}"></script>
@@ -37,3 +38,5 @@
 
 <!-- App js -->
 <script src="{{ asset('public/assets/js/app.js') }}"></script>
+
+<!-- Datatables Bootstrap5 -->

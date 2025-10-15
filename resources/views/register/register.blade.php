@@ -4,20 +4,20 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sign Up | GI-RR</title>
+    <title>Sign Up | GI-GOF</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta content="Globalindo Report & Repair" name="description">
     <meta content="MIS Team" name="author">
 
     <link rel="shortcut icon" href="{{ asset('public/assets/images/logo/icon.PNG') }}">
     <script src="{{ asset('public/assets/js/layout.js') }}"></script>
-
+    <link href="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('public/assets/css/icons.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/libs/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/libs/choices.js/public/assets/styles/choices.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/css/tailwind2.css') }}">
-
+    <script src="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Lottie Player -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
@@ -45,7 +45,7 @@
 
                                     <!-- Flash Messages -->
                                     <div class="flashMsg">
-                                       @if (session('msgErr'))
+                                        @if (session('msgErr'))
                                         <div
                                             class="p-3 mb-3 text-base text-red-500 border border-red-200 rounded-md bg-red-50">
                                             {{ session('msgErr') }}
@@ -58,7 +58,16 @@
                                         </div>
                                         @endif
                                     </div>
-
+                                    <!--Fullname-->
+                                    <div class="mb-3">
+                                        <label for="fullname"
+                                            class="inline-block mb-2 text-base font-medium">Fullname</label>
+                                        <input type="text" id="fullname" name="fullname"
+                                            class="form-input w-full border-slate-200 focus:outline-none focus:border-custom-500 placeholder:text-slate-400"
+                                            placeholder="Enter fullname" autofocus required>
+                                        <div id="fullname-error" class="hidden mt-1 text-sm text-red-500">Please enter
+                                            fullname</div>
+                                    </div>
                                     <!-- Username -->
                                     <div class="mb-3">
                                         <label for="username"
@@ -96,7 +105,7 @@
                                         <label for="dept"
                                             class="inline-block mb-2 text-base font-medium">Department</label>
 
-                                        <ul class="grid grid-cols-2 gap-x-4 gap-y-2 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg p-3"
+                                        <ul id ="radios" class="grid grid-cols-2 gap-x-4 gap-y-2 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg p-3"
                                             required>
 
                                             <!-- MIS -->
@@ -131,8 +140,7 @@
                                             <!-- Production -->
                                             <li>
                                                 <div class="flex items-center">
-                                                    <input id="dept-production" type="radio" value="PR"
-                                                        name="dept"
+                                                    <input id="dept-production" type="radio" value="PR" name="dept"
                                                         class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                                     <label for="dept-production"
                                                         class="ml-2 text-sm font-medium">Production</label>
@@ -142,8 +150,7 @@
                                             <!-- Warehouse -->
                                             <li>
                                                 <div class="flex items-center">
-                                                    <input id="dept-warehouse" type="radio" value="WH"
-                                                        name="dept"
+                                                    <input id="dept-warehouse" type="radio" value="WH" name="dept"
                                                         class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                                     <label for="dept-warehouse"
                                                         class="ml-2 text-sm font-medium">Warehouse</label>
@@ -181,8 +188,7 @@
                                             <!-- Accounting -->
                                             <li>
                                                 <div class="flex items-center">
-                                                    <input id="dept-accounting" type="radio" value="ACT"
-                                                        name="dept"
+                                                    <input id="dept-accounting" type="radio" value="ACT" name="dept"
                                                         class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                                     <label for="dept-accounting"
                                                         class="ml-2 text-sm font-medium">Accounting</label>
@@ -191,25 +197,15 @@
 
                                         </ul>
                                     </div>
-                                    <script>
-                                    document.getElementById('signUpForm').addEventListener('submit', function (e) {
-                                    let pass = document.getElementById('password').value;
-                                    let confirm = document.getElementById('password_confirmation').value;
-
-                                    if (pass !== confirm) {
-                                    e.preventDefault();
-                                    document.getElementById('password-confirmation-error').classList.remove('hidden');
-                                    document.getElementById('password-confirmation-error').innerText = "Passwords do not match";
-                                    }
-                                    });
-                                    </script>
-                                    <!-- Sign In Button -->
+                                    
+                                    <!-- Sign Up Button -->
                                     <div class="mt-10">
-                                        <button type="submit"
-                                            class="w-full text-white btn bg-custom-500 border-custom-500 hover:bg-custom-600 focus:bg-custom-600 focus:ring focus:ring-custom-100" id ="btnSignUp">
+                                        <button type="button"
+                                            class="w-full text-white btn bg-custom-500 border-custom-500 hover:bg-custom-600 focus:bg-custom-600 focus:ring focus:ring-custom-100"
+                                            id="btnSignUp">
                                             Sign Up
                                         </button>
-                                        </script>
+                                        
                                     </div>
                                 </form>
                             </div>
@@ -239,8 +235,9 @@
                 <img src="{{ asset('public/assets/images/logo/logo-gi-transparant.png') }}" alt="Logo GI"
                     class="block mx-auto w-20 h-[70px]">
                 <div class="mt-2 text-center">
-                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-RR</h2>
-                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates Report & Repair | MIS
+                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GOF</h2>
+                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Operational
+                        Facility Request and Maintenance | MIS
                         Team </p>
                 </div>
 
@@ -250,7 +247,162 @@
             </div>
         </div>
     </div>
+    <script>
+    const signUpBtn = document.getElementById('btnSignUp');
 
+    signUpBtn.addEventListener('click', function() {
+        let username = document.getElementById('username').value.trim();
+        let fullname = document.getElementById('fullname').value.trim();
+        let pass = document.getElementById('password').value;
+        let confirm = document.getElementById('password_confirmation').value;
+        const radios = document.querySelectorAll('input[name="dept"]');
+        const selected = Array.from(radios).some(radio => radio.checked);
+        if (fullname === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter fullname first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }else if (username === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter username first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }else if (pass === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter password first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+            
+        }
+        else if (pass.length < 6) {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Password min 6 characters!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }
+        else if (confirm === "") {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please enter password confirm first!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }else if (pass != confirm) {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Passwords do not match!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }else if (!selected) {
+            Swal.fire({
+                title: 'Oops!',
+                text: "Please select your department!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ah i forgot, Sure!',
+            });
+            return;
+        }
+
+        let url = "{{ url('/auth/validate') }}" + '?username=' + encodeURIComponent(username);
+        let payload = {
+            username: username,
+        };
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                payload
+
+            }).then(response => response.json())
+            .then(data => {
+
+                if (data.exists) {
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: "Username has been taken! Please use another",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Sure!',
+                    });
+                    return;
+                } else {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Your data will be saved!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sure!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('signUpForm').submit();
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Done!',
+                                    text: '{{ session("success") }}',
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Failed!',
+                                    text: '{{ session("error") }}',
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                });
+                            }
+                            location.reload();
+                        } else if (result.dismiss === Swal.DismissReason
+                            .cancel) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Cancelled',
+                                text: 'Cancelled!',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            });
+
+    });
+    </script>
     <!-- JS Libraries -->
     <script src="{{ asset('public/assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
     <script src="{{ asset('public/assets/libs/@popperjs/core/umd/popper.min.js') }}"></script>

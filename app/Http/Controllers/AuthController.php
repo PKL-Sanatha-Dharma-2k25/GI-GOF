@@ -59,7 +59,9 @@ class AuthController extends Controller
     Session::flash('msgErr', 'Password minimal 6 karakter!');
     return redirect()->route('register.register');
 }
+        
         $request->validate([
+            'fullname' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255'],
             'dept' => ['required', 'string', 'max:255'],
             'password' => ['required','min:6','confirmed'],
@@ -110,7 +112,9 @@ class AuthController extends Controller
         }elseif($deptId == 2){
             $role = 1; //admin
         }
+        
         $user = PemohonModel::create([
+            'fullname' => $request->fullname,
             'username' => $request->username,
             'dept_id' => $deptId,
             'role' => $role,
@@ -131,5 +135,45 @@ class AuthController extends Controller
         
         return redirect('/');
     }
+public function usernameValidate(Request $request)
+{     
+    $exists = PemohonModel::where('username', $request->username)->exists();
+
+    return response()->json([
+        'exists' => $exists
+    ]);
+
+}
+public function signInValidate(Request $request){
+      $data = $request->validate([
+        'username' => 'required|string',
+        'password' => 'required|min:6'
+    ]);
+
+    // Cek apakah username ada di database
+    $user = PemohonModel::where('username', $data['username'])->first();
+
+    if (!$user) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'These credentials do not match our records (username not found).'
+        ], 404);
+    }
+
+    // Cek apakah password cocok
+    if (!Hash::check($data['password'], $user->password)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Incorrect password.'
+        ], 401);
+    }
+
+    // Jika keduanya cocok
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Credentials verified successfully.',
+        'user' => $user
+    ]);
+}
 
 }

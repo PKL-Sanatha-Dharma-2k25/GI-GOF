@@ -8,30 +8,53 @@ class PermohonanModel extends Model
 {
     Protected $table = 'permohonan_models';
     use HasFactory;
-        protected $attributes = [
-        'alasan' => 'Pending',
-    ];
         protected $fillable = [
-        'nama_item',
-        'kode_item',
+        'no_permohonan',
+        'kode_barang',
         'tgl_pengajuan',
         'tgl_selesai',
-        'status',
-        'alasan',
+        'status_id',
+        'alasan_permohonan',
         'est_biaya',
         'akt_biaya',
-        'foto_item_sebelum',
-        'foto_item_sesudah',
+        'jumlah_barang',
+        'lokasi_id',
+        'jenis_permohonan_id',
+        'foto_sebelum',
+        'foto_sesudah',
         'pemohon_id',
         'peninjau_id',
         'kepentingan',
+        'catatan_peninjau',
+        'foto_bukti_pembayaran',
+        'dept_id'
+    
     ];
         public function pemohon()
     {
-        return $this->belongsTo(PemohonModel::class, 'pemohon_id');
+        return $this->belongsTo(PemohonModel::class, 'pemohon_id','id');
     }
         public function peninjau()
     {
-        return $this->belongsTo(PemohonModel::class, 'peninjau_id');
+        return $this->belongsTo(PemohonModel::class, 'peninjau_id','id');
     }
+        public function lokasi()
+    {
+        return $this->belongsTo(MasterLokasiModel::class, 'lokasi_id', 'id');
+    }
+        public function status()
+    {
+        return $this->belongsTo(MasterStatusModel::class, 'status_id', 'id');
+    }
+        public function jenis_permohonan()
+    {
+        return $this->belongsTo(MasterJenisPermohonanModel::class, 'jenis_permohonan_id', 'id');
+    }
+    public function barang()
+{
+    return $this->belongsToMany(MasterBarangModel::class, 'permohonan_barangs', 'permohonan_id', 'barang_id')
+                ->withPivot('jumlah', 'keterangan')
+                ->withTimestamps();
+}
+
 }

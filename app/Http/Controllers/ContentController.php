@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MasterStatusModel;
 use App\Models\PemohonModel;
 use App\Models\PermohonanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 class ContentController extends Controller
 {
@@ -22,16 +24,42 @@ class ContentController extends Controller
     {
         $sessionUser= $request->session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
-        $data = [
+        $userId = $user->id;
+        // Statistics
+    $totalApplications = PermohonanModel::where('pemohon_id', $userId)->count();
+    $pending = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 1)->count();
+    $approved = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 2)->count();
+    $onProgress = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 4)->count();
+    $finished = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 5)->count();
+    $rejected = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 3)->count();
+    // Recent Applications (5 terbaru)
+    $recentApplications = PermohonanModel::with(['status', 'jenis_permohonan', 'lokasi', 'barang'])
+        ->where('pemohon_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+    
+    // Monthly Activity (6 bulan terakhir)
+    $monthLabels = [];
+    $monthData = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $date = now()->subMonths($i);
+        $monthLabels[] = $date->format('M');
+        $monthData[] = PermohonanModel::where('pemohon_id', $userId)
+            ->whereYear('created_at', $date->year)
+            ->whereMonth('created_at', $date->month)
+            ->count();
+    }
+    $data = [
             'title' => 'Main Dashboard | GI-GOF',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
         ];
-        
-        
-        return view('content.dashboard', $data);
+    return view('content.dashboard',$data ,compact(
+        'totalApplications', 'pending', 'approved', 'onProgress', 'finished',
+        'recentApplications', 'monthLabels', 'monthData','rejected'
+    ));
     }
         public function register(): View
     {
@@ -43,12 +71,75 @@ class ContentController extends Controller
     }
        public function dashboardAdmin()
     {
+        // Statistics
+    $pending = PermohonanModel::where('status_id', 1)->count();
+    $approved = PermohonanModel::where('status_id', 2)->count();
+    $onProgress = PermohonanModel::where('status_id', 4)->count();
+    $finished = PermohonanModel::where('status_id', 5)->count();
+    $rejected = PermohonanModel::where('status_id',3)->count();
+
+    $sum = $pending+$approved+$onProgress+$finished+$rejected;
+    
+    // By Urgency
+    $sangatMendesak = PermohonanModel::where('kepentingan', 'Sangat Mendesak')->count();
+    $mendesak = PermohonanModel::where('kepentingan', 'Mendesak')->count();
+    $normal = PermohonanModel::where('kepentingan', 'Normal')->count();
+    
+    // Recent Applications
+    $recentApplications = PermohonanModel::with(['pemohon.department', 'status'])
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+    
+    // By Department
+    $deptStats = PermohonanModel::join('pemohon_models', 'permohonan_models.pemohon_id', '=', 'pemohon_models.id')
+        ->join('master_department_models', 'pemohon_models.dept_id', '=', 'master_department_models.id')
+        ->select('master_department_models.dept_name', DB::raw('count(*) as total'))
+        ->groupBy('master_department_models.dept_name')
+        ->get();
+    
+    $deptLabels = $deptStats->pluck('dept_name');
+    $deptData = $deptStats->pluck('total');
+    
+    // By Status
+    $statusData = [
+        PermohonanModel::where('status_id', 1)->count(), // Pending
+        PermohonanModel::where('status_id', 2)->count(), // Approved
+        PermohonanModel::where('status_id', 4)->count(), // On Progress
+        PermohonanModel::where('status_id', 5)->count(),// Finished
+        PermohonanModel::where('status_id', 3)->count(), // Rejected 
+    ];
+    
+    // Monthly Trend (6 bulan terakhir)
+    $monthLabels = [];
+    $monthData = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $date = now()->subMonths($i);
+        $monthLabels[] = $date->format('M');
+        $monthData[] = PermohonanModel::whereYear('created_at', $date->year)
+            ->whereMonth('created_at', $date->month)
+            ->count();
+    }
+    
+    // Top Requested Items
+    $topItems = DB::table('permohonan_barangs')
+        ->join('master_barang_models', 'permohonan_barangs.barang_id', '=', 'master_barang_models.id')
+        ->select('master_barang_models.nama_barang', 'master_barang_models.kode_barang', DB::raw('SUM(permohonan_barangs.jumlah) as total_requests'))
+        ->groupBy('master_barang_models.id', 'master_barang_models.nama_barang', 'master_barang_models.kode_barang')
+        ->orderBy('total_requests', 'desc')
+        ->take(5)
+        ->get();
         $data = [
             'title' => 'Admin Dashboard | GI-GOF',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard'
         ];
-        return view('content.dashboardAdmin', $data);
+        return view('content.dashboardAdmin', $data,compact(
+        'pending', 'approved', 'onProgress', 'finished','rejected',
+        'sangatMendesak', 'mendesak', 'normal',
+        'recentApplications', 'deptLabels', 'deptData',
+        'statusData', 'monthLabels', 'monthData', 'topItems','sum'
+    ));
     }
            public function dashboardSuperAdmin()
     {
@@ -63,7 +154,7 @@ class ContentController extends Controller
     {
         $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
+        
         $data = [
             'title' => 'Main Dashboard | GI-GOF',
             'menu' => 'Content',
@@ -73,130 +164,139 @@ class ContentController extends Controller
         return view ('content.create',$data);
     }
          
-    public function check(string $id, Request $request): View
+    public function check(string $id): View
     {   
         $query = PermohonanModel::where('pemohon_id', $id);
-        $sortBy = $request->get('sort_by', 'tgl_pengajuan');
-           $sortOrder = $request->get('sort_order', 'desc');
-        $allowedSortColumns = ['nama_item', 'kepentingan', 'tgl_pengajuan', 'tgl_selesai', 'est_biaya', 'akt_biaya', 'status'];
-         if (in_array($sortBy, $allowedSortColumns)) {
-            if ($sortBy === 'kepentingan') {
-    $query->orderByRaw("
-        CASE kepentingan
-            WHEN 'Normal' THEN 1
-            WHEN 'Mendesak' THEN 2
-            WHEN 'Sangat Mendesak' THEN 3
-        END $sortOrder
-    ");
-} else {
-    $query->orderBy($sortBy, $sortOrder);
-}
-    
-            $query->orderBy($sortBy, $sortOrder);
-        } else {
-            $query->orderBy('tgl_pengajuan', 'desc');
-        }
-        $permohonans = $query->paginate(10);
-               $sessionUser= session()->get('user');
+        
+       
+        $permohonans = $query->with(['status','lokasi','barang','jenis_permohonan','peninjau'])->paginate(10);
+        $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
+
         $data = [
             'title' => 'Main Dashboard | GI-GOF',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
         ];
-        return view ('content.check',$data, compact('permohonans', 'sortBy', 'sortOrder'));
+        return view ('content.check',$data, compact('permohonans'));
     }
-    
-    public function show(Request $request): View
+    public function showAll(): View
     {    
-        $query = PermohonanModel::query();
-        $sortBy = $request->get('sort_by', 'tgl_pengajuan');
-           $sortOrder = $request->get('sort_order', 'desc');
-        $allowedSortColumns = ['nama_item', 'kepentingan', 'tgl_pengajuan', 'tgl_selesai', 'est_biaya', 'akt_biaya', 'status'];
-         if (in_array($sortBy, $allowedSortColumns)) {
-            if ($sortBy === 'kepentingan') {
-    $query->orderByRaw("
-        CASE kepentingan
-            WHEN 'Normal' THEN 1
-            WHEN 'Mendesak' THEN 2
-            WHEN 'Sangat Mendesak' THEN 3
-        END $sortOrder
-    ");
-}else if($sortBy === 'status'){
-    $query->orderByRaw("
-        CASE status
-            WHEN 'Approved' THEN 1
-            WHEN 'Pending' THEN 2
-            WHEN 'Rejected' THEN 3
-        END $sortOrder
-    ");
-} else {
-    $query->orderBy($sortBy, $sortOrder);
-}
+        $permohonans = PermohonanModel::with([
+            'status',
+            'lokasi',
+            'barang',
+            'jenis_permohonan',
+            'peninjau',
+            'pemohon.department' // Load department juga
+        ])->get();
 
-            $query->orderBy($sortBy, $sortOrder);
-        } else {
-            $query->orderBy('tgl_pengajuan', 'desc');
-        }
-        $permohonans = $query->paginate(10);
-
-        //$permohonans = PermohonanModel::get();
-               $sessionUser= session()->get('user');
+        
+        $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
+        
         $data = [
-            'title' => 'Main Dashboard | GI-GOF',
+            'title' => 'Available Application | GI-GOF',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
         ];
-        return view('content.showApplication',$data, compact('permohonans', 'sortBy', 'sortOrder'));
+        return view('content.showAllApplication',$data, compact('permohonans'));
+    }
+    public function show(): View
+    {    
+        $permohonans = PermohonanModel::where('status_id', 1)->with([
+            'status',
+            'lokasi',
+            'barang',
+            'jenis_permohonan',
+            'peninjau',
+            'pemohon.department' // Load department juga
+        ])->get();
+
+        
+        $sessionUser= session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        
+        $data = [
+            'title' => 'Available Application | GI-GOF',
+            'menu' => 'Content',
+            'sub_menu' => 'Dashboard',
+            'user' => $user,
+        ];
+        return view('content.showApplication',$data, compact('permohonans'));
     }
 
-    public function showApproved(Request $request): View
+    public function showApproved(): View
     {    
-        $query = PermohonanModel::query()->where('status', 'Approved');
-        $sortBy = $request->get('sort_by', 'tgl_pengajuan');
-           $sortOrder = $request->get('sort_order', 'desc');
-        $allowedSortColumns = ['nama_item', 'kepentingan', 'tgl_pengajuan', 'tgl_selesai', 'est_biaya', 'akt_biaya', 'status'];
-         if (in_array($sortBy, $allowedSortColumns)) {
-            if ($sortBy === 'kepentingan') {
-    $query->orderByRaw("
-        CASE kepentingan
-            WHEN 'Normal' THEN 1
-            WHEN 'Mendesak' THEN 2
-            WHEN 'Sangat Mendesak' THEN 3
-        END $sortOrder
-    ");
-}else if($sortBy === 'status'){
-    $query->orderByRaw("
-        CASE status
-            WHEN 'Approved' THEN 1
-            WHEN 'Pending' THEN 2
-            WHEN 'Rejected' THEN 3
-        END $sortOrder
-    ");
-} else {
-    $query->orderBy($sortBy, $sortOrder);
-}
-
-            $query->orderBy($sortBy, $sortOrder);
-        } else {
-            $query->orderBy('tgl_pengajuan', 'desc');
-        }
-        $permohonans = $query->paginate(10);
-
+        $permohonans = PermohonanModel::whereIn('status_id', [2, 4])
+            ->with([
+                'status',
+                'lokasi',
+                'barang',
+                'jenis_permohonan',
+                'peninjau',
+                'pemohon.department'
+            ])
+            ->get();
                $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         //dd($user);
         $data = [
-            'title' => 'Main Dashboard | GI-GOF',
+            'title' => 'Approved Application | GI-GOF',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
         ];
-        return view('content.showApproved',$data, compact('permohonans', 'sortBy', 'sortOrder'));
+        return view('content.showApproved',$data, compact('permohonans'));
+    }
+    public function showFinished(): View
+    {    
+         $permohonans = PermohonanModel::where('status_id', 5  )->with([
+            'status',
+            'lokasi',
+            'barang',
+            'jenis_permohonan',
+            'peninjau',
+            'pemohon.department' 
+        ])->get();
+        $sessionUser= session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        //dd($user);
+        $data = [
+            'title' => 'Finished Application | GI-GOF',
+            'menu' => 'Content',
+            'sub_menu' => 'Dashboard',
+            'user' => $user,
+        ];
+        return view('content.showFinished',$data, compact('permohonans'));
+    }
+    public function printOut( $id): View
+    {   
+        $sessionUser= session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        $permohonan = PermohonanModel::with(['barang', 'pemohon','lokasi','status'])->findOrFail($id);
+        $data = [
+            'title' => 'Print Out | GI-GOF',
+            'menu' => 'Content',
+            'sub_menu' => 'Dashboard',
+            'user' => $user,
+        ];
+        return view('content.print',$data, compact('permohonan'));    
+    }
+
+     public function printOutISO( $id): View
+    {   
+        $sessionUser= session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        $permohonan = PermohonanModel::with(['barang', 'pemohon','lokasi','status'])->findOrFail($id);
+        $data = [
+            'title' => 'Print Out ISO Form | GI-GOF',
+            'menu' => 'Content',
+            'sub_menu' => 'Dashboard',
+            'user' => $user,
+        ];
+        return view('content.printISO',$data, compact('permohonan'));    
     }
 }
