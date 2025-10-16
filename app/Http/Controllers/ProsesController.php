@@ -50,8 +50,6 @@ class ProsesController extends Controller
             ->orderBy('permohonan_models.created_at', 'desc')
             ->select('permohonan_models.*') 
             ->first();
-        
-        
         $counter = $lastPermohonan ? 
             (int)substr($lastPermohonan->no_permohonan, -4) + 1 : 1;
         
@@ -63,6 +61,7 @@ class ProsesController extends Controller
         $image = $request->file('file_upload');
         $path = $image->storeAs('permohonans', $image->hashName(), 'public');
         $jenis = MasterJenisPermohonanModel::where('nama_jenis_permohonan', $request->jenis_permohonan)->first();
+        
         
         // Simpan permohonan
         $data = PermohonanModel::create([
@@ -93,7 +92,6 @@ class ProsesController extends Controller
     } catch (\Exception $e) {
         DB::rollBack(); // Jika error, batalkan semua perubahan
         dd($e->getMessage(), $e->getTrace());
-        //return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
     public function getNamaBarang(){
@@ -223,7 +221,7 @@ class ProsesController extends Controller
             'created_at' => $created_at,
             'approved_at' => $approved_at,
             
-            // ✅ Barang dalam format array
+            
             'barang' => $permohonan->barang->map(function($item) {
                 return [
                     'nama_barang' => $item->nama_barang,
@@ -348,6 +346,7 @@ public function updateOnProgress(Request $request)
         $permohonan->on_progress_at = $on_progress_at;
         $permohonan->status_id = $request->status_id;
         $permohonan->est_biaya = $clean_est_biaya;
+        $permohonan->est_pengerjaan = $request->est_pengerjaan;
         $permohonan->save();
         return redirect()->back()->with('success', 'Application On Progress.');
     }
@@ -363,7 +362,7 @@ public function finished(Request $request)
             $request->validate([
             'file_upload' => ['required','image','mimes:jpeg,jpg,png,webp', 'max:10240'],
         ]);
-        // dd($request->all());
+        
     $permohonan = PermohonanModel::find($request->id);
     if ($permohonan) {
         $permohonan->finished_at = $finished_at;

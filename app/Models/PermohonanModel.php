@@ -17,6 +17,7 @@ class PermohonanModel extends Model
         'alasan_permohonan',
         'est_biaya',
         'akt_biaya',
+        'est_pengerjaan',
         'jumlah_barang',
         'lokasi_id',
         'jenis_permohonan_id',

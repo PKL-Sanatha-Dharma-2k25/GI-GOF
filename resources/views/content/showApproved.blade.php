@@ -362,21 +362,36 @@ document.addEventListener('click', function(e) {
             </div>
             <div class="mb-3">
             <input type="hidden" name="status_id" value="4" id="status_id">
-                <label for="est_cost" class="inline-block mb-2 text-base font-medium">Estimation Cost : <span class="text-red-500">*</span></label>
+                <label for="est_cost" class="inline-block mb-2 text-base font-medium">Estimation Cost <strong>(Rp)</strong> : <span class="text-red-500">*</span></label>
                 <input type="number" id="est_cost" name="est_biaya" class="form-input border-slate-200 bg-slate-100" placeholder="Please fill estimation cost..." required>
+            </div>
+            <div class="mb-3 md:col-span-2">
+                <label for="est_day" class="inline-block mb-2 text-base font-medium">Work Estimation <strong>(day)</strong> : <span class="text-red-500">*</span></label>
+                <input type="number" id="est_day" name="est_pengerjaan" class="form-input border-slate-200 bg-slate-100" placeholder="Please input work estimation..." required>
             </div>
             <button type="button" id="onProgBtn" data-id="${data.id}" class="m-4 text-white bg-orange-500 btn ">Update Status "On Progress"</button>
             <button type="button" id="rejectBtn" data-id="${data.id}" class="m-4 text-white bg-red-500 btn ">Reject Application</button>
         </div>
         </form>
-    `;
+    `
                     const onProgBtn = document.getElementById('onProgBtn');
                     onProgBtn.addEventListener('click', function() {
                         const estCostValue = document.getElementById('est_cost').value.trim();
+                        const estWorkValue = document.getElementById('est_day').value.trim();
                         if (estCostValue === "" || estCostValue === null) {
                             Swal.fire({
                                 title: 'Oops!',
                                 text: "Please fill estimation cost first!",
+                                icon: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ah i forgot, Sure!',
+                            });
+                            return;
+                        }else if(estWorkValue === "" || estWorkValue === null) {
+                            Swal.fire({
+                                title: 'Oops!',
+                                text: "Please input work estimation first!",
                                 icon: 'warning',
                                 showCancelButton: false,
                                 confirmButtonColor: '#3085d6',

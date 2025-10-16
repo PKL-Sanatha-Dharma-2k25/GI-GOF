@@ -243,7 +243,7 @@ class ContentController extends Controller
             ->get();
                $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
+        
         $data = [
             'title' => 'Approved Application | GI-GOF',
             'menu' => 'Content',
@@ -264,7 +264,7 @@ class ContentController extends Controller
         ])->get();
         $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
-        //dd($user);
+        
         $data = [
             'title' => 'Finished Application | GI-GOF',
             'menu' => 'Content',
