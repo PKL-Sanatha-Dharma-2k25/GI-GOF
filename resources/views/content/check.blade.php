@@ -44,6 +44,7 @@
                                 </th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">Reviewer(GA)</th>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">GA Notes</th>
+                                <th class="text-center cursor-pointer hover:bg-gray-100">Work Est</th>
                                 <th class="th_action text-center cursor-pointer hover:bg-gray-100">Action</th>
                             </tr>
                         </thead>
@@ -92,11 +93,13 @@
                                 </td>
                                 <td class="text-center">{{ $permohonan->peninjau->username ?? '-' }}</td>
                                 <td class="text-center">{{ $permohonan->catatan_peninjau ?? '-' }}</td>
+                                <td class="text-center">{{ $permohonan->est_pengerjaan ?? '-' }} <strong>Days</strong>
+                                </td>
                                 <td class="td_action text-center">
                                     <button type="button" id="deleteBtn" data-id="{{ $permohonan->id }}"
                                         data-url="{{  url('/process/'.$permohonan->id.'/delete') }}"
                                         class="deleteBtn finished m-4 text-white bg-red-500 btn ">
-                                        Delete
+                                        Cancel
                                     </button>
                                 </td>
                             </tr>
@@ -109,10 +112,11 @@
     </div>
 </div>
 <!-- MODAL CONTOH -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden" id="blurDiv"></div>
 <div id="ModalContoh" class="fixed inset-0 z-drawer flex items-start justify-center pt-10 overflow-y-auto hidden">
     <div class="bg-white shadow rounded-md w-screen lg:w-[40rem] flex flex-col">
         <div class="flex items-center justify-between p-4 border-b border-slate-200">
-            <h5 class="text-16">Detail Permohonan</h5>
+            <h5 class="text-16">Cancel Application</h5>
             <button onclick="closeAjaxModal()"
                 class="transition-all duration-100 ease-linear text-slate-500 hover:text-red-500">
                 <i data-lucide="x" class="size-5"></i>
@@ -127,63 +131,102 @@
 const deleteButtons = document.querySelectorAll('.deleteBtn');
 deleteButtons.forEach(btn => {
 
-
     btn.addEventListener('click', function(e) {
-        let id = e.target.dataset.id;
+       let id = e.target.dataset.id;
         let url = e.target.dataset.url;
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Application will be deleted!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sure!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(url, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Done!',
-                                text: '{{ session("success") }}',
-                                timer: 2500,
-                                showConfirmButton: false
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Failed!',
-                                text: '{{ session("error") }}',
-                                timer: 2500,
-                                showConfirmButton: false
-                            });
-                        }
-                        location.reload();
-                })
-            } else if (result.dismiss === Swal.DismissReason
-                .cancel) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Cancelled',
-                    text: 'Application will not be deleted',
-                    timer: 2500,
-                    showConfirmButton: false
-                });
-            }
-            })
-        });
+        
+        // Tampilkan modal
+        toggleElementState('ModalContoh', true, 200);
+        toggleElementState('blurDiv', true, 200);
+        
+        
+        document.querySelector('#ModalContoh .modal-body').innerHTML = `
+            <form id="submit_GA_note" method="POST" action="{{ url('process/cancel') }}">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="id" value="${id}">
+                <input type="hidden" name="status_id" value="6">
+                <div class="p-4 border-b border-slate-200">
+                    <label class="inline-block mb-2 text-base font-medium">
+                        Cancel Reason: <span class="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                        name="catatan_pemohon" 
+                        class="form-input border-slate-200 w-full rounded-md" 
+                        rows="4"
+                        placeholder="Please fill this input..."
+                        required></textarea>
+                </div>
+                <div class="flex items-center justify-end gap-2 p-4">
+                    <button 
+                        type="button" 
+                        onclick="closeAjaxModal()" 
+                        class="px-4 py-2 text-slate-600 bg-slate-100 rounded hover:bg-slate-200">
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600">
+                        Submit Cancellation
+                    </button>
+                </div>
+            </form>
+        `;
+
+        // Swal.fire({
+        //     title: 'Are you sure?',
+        //     text: "Application will be cancelled!",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonColor: '#3085d6',
+        //     cancelButtonColor: '#d33',
+        //     confirmButtonText: 'Sure!',
+        //     cancelButtonText: 'Cancel'
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+
+        //         // fetch(url, {
+        //         //         method: 'DELETE',
+        //         //         headers: {
+        //         //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        //         //             'Accept': 'application/json',
+        //         //             'Content-Type': 'application/json'
+        //         //         }
+        //         //     })
+        //         //     .then(res => res.json())
+        //         //     .then(response => {
+        //         //         if (response.success) {
+        //         //             Swal.fire({
+        //         //                 icon: 'success',
+        //         //                 title: 'Done!',
+        //         //                 text: '{{ session("success") }}',
+        //         //                 timer: 2500,
+        //         //                 showConfirmButton: false
+        //         //             });
+        //         //         } else {
+        //         //             Swal.fire({
+        //         //                 icon: 'error',
+        //         //                 title: 'Failed!',
+        //         //                 text: '{{ session("error") }}',
+        //         //                 timer: 2500,
+        //         //                 showConfirmButton: false
+        //         //             });
+        //         //         }
+        //         //         location.reload();
+        //         // })
+        //     } else if (result.dismiss === Swal.DismissReason
+        //         .cancel) {
+        //         Swal.fire({
+        //             icon: 'info',
+        //             title: 'Cancelled',
+        //             text: 'Application will not be cancelled',
+        //             timer: 2500,
+        //             showConfirmButton: false
+        //         });
+        //     }
+        //     })
     });
+});
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -198,6 +241,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function closeAjaxModal() {
+    toggleElementState('ModalContoh', false, 200);
+    toggleElementState('blurDiv', false, 200);
+}
 
 $('#myTable').DataTable({
     columnDefs: [
@@ -255,62 +302,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-$(document).ready(function() {
-    // Select 2
-    $('.select2').select2({
-        theme: "bootstrap-5",
-        width: function() {
-            return $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ?
-                '100%' : 'style';
-        }
-    });
-    // Sweet Alert Swal.Fire
-    $('#sweet_alert').on('click', function() {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Save',
-            customClass: {
-                confirmButton: 'text-white bg-green-500 border-green-500 btn hover:text-white hover:bg-green-600 hover:border-green-600 focus:text-white focus:bg-green-600 focus:border-green-600 focus:ring focus:ring-green-100 active:text-white active:bg-green-600 active:border-green-600 active:ring active:ring-green-100 ltr:mr-1 rtl:ml-1',
-                cancelButton: 'text-white bg-red-500 border-red-500 btn hover:text-white hover:bg-red-600 hover:border-red-600 focus:text-white focus:bg-red-600 focus:border-red-600 focus:ring focus:ring-red-100 active:text-white active:bg-red-600 active:border-red-600 active:ring active:ring-red-100',
-                denyButton: "text-white btn bg-sky-500 border-sky-500 hover:text-white hover:bg-sky-600 hover:border-sky-600 focus:text-white focus:bg-sky-600 focus:border-sky-600 focus:ring focus:ring-sky-100 active:text-white active:bg-sky-600 active:border-sky-600 active:ring active:ring-sky-100 ltr:mr-1 rtl:ml-1"
-            },
-            buttonsStyling: false,
-            denyButtonText: 'Eror',
-            showCloseButton: true
-        }).then(function(result) {
-            if (result.value) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Your work has been saved',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    showCloseButton: true
-                })
-            } else if (result.isDenied) {
-                Swal.fire({
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    icon: 'error',
-                    customClass: {
-                        confirmButton: 'text-white btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100',
-                    },
-                    buttonsStyling: false,
-                    footer: '<a href="#!" class="inline-flex items-center gap-2 mt-3 text-base font-medium text-custom-400 hover:text-custom-600">Why do I have this issue?</a>',
-                    showCloseButton: true
-                })
-            }
-        });
-    });
-    // Modal
-    $('#modal').on('click', function() {
-        toggleElementState('ModalContoh', true, 200);
-    })
-})
-
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('image-modal')) {
         const imageUrl = e.target.getAttribute('data-image-url');

@@ -352,6 +352,22 @@ public function updateOnProgress(Request $request)
     }
         return redirect()->back()->with('error', 'Application not found.');
 }
+
+public function cancelApplication(Request $request)
+{
+    $cancelled_at = now();
+    $permohonan = PermohonanModel::find($request->id);
+    if ($permohonan) {
+        $permohonan->cancelled_at = $cancelled_at;
+        $permohonan->status_id = $request->status_id;
+        $permohonan->catatan_pemohon = $request->catatan_pemohon;
+        $permohonan->save();
+
+        return redirect()->back()->with('success', 'Application Cancelled.');
+    }
+        return redirect()->back()->with('error', 'Application not found.');
+}
+
 public function finished(Request $request)
 {
     $finished_at = now();
