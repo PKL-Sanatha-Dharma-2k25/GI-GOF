@@ -236,8 +236,7 @@
                     class="block mx-auto w-20 h-[70px]">
                 <div class="mt-2 text-center">
                     <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GOF</h2>
-                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Operational
-                        Facility Request and Maintenance | MIS
+                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Form Request and Maintenance | MIS
                         Team </p>
                 </div>
 

@@ -277,6 +277,30 @@ public function approve(Request $request)
     return response()->json(['success' => false], 404);
 }
 
+public function getAppData(Request $request){
+    $permohonan = PermohonanModel::whereYear('permohonan_models.created_at', $request->year)
+    ->whereMonth('permohonan_models.created_at',$request->month)->get();
+    
+    $pending = $permohonan->where('status_id',1)->count();
+    $approved= $permohonan->where('status_id',2)->count();
+    $rejected = $permohonan->where('status_id',3)->count();
+    $onProg = $permohonan->where('status_id',4)->count();
+    $finished = $permohonan->where('status_id',5)->count();
+
+    $sum = $pending+$approved+$rejected+$onProg+$finished;
+    $data = [
+        'pending' => $pending,
+        'approved' => $approved,
+        'rejected' => $rejected,
+        'onProgress' => $onProg,
+        'finished' => $finished,
+        'sum' => $sum,
+    ];
+    return response()->json([
+        'data' => $data
+    ]);
+   
+}
 public function reject(Request $request)
 {
     $rejected_at = now();
@@ -297,7 +321,6 @@ public function reject(Request $request)
 
 public function updateOnProgress(Request $request)
 {
-    
     $on_progress_at = now();
     $est_biaya  = $request->est_biaya;
     $clean_est_biaya = preg_replace("/[a-zA-Z]/", "", $est_biaya);
@@ -310,11 +333,9 @@ public function updateOnProgress(Request $request)
         return redirect()->back()->with('success', 'Application On Progress.');
     }
         return redirect()->back()->with('error', 'Application not found.');
-
 }
 public function finished(Request $request)
 {
-    
     $finished_at = now();
     $akt_biaya  = $request->akt_biaya;
     $clean_akt_biaya = preg_replace("/[a-zA-Z]/", "", $akt_biaya);

@@ -3,7 +3,7 @@
 <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
     <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
         <div class="grow">
-            <h5 class="text-16">Hi {{session('user.username')}} (General Affair) ! 👋</h5>
+
         </div>
         <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
             <li
@@ -13,129 +13,158 @@
             <li class="text-slate-700">Dashboard General Affair</li>
         </ul>
     </div>
+    <div class="card">
+        <div class="card-body ">
+            <div class="grid grid-cols-1 gap-x-5 md:grid-cols-4 xl:grid-cols-5 mb-5">
+                <h5 class=" md:col-span-2 text-16">Monthly General Requestition Status Maintenance</h5>
+                <select class="monthSelect" id="monthSelect">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <select class="yearSelect" id="yearSelect">
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                    <option value="2031">2031</option>
+                    <option value="2032">2032</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-1 gap-x-5 md:grid-cols-2 xl:grid-cols-5 mb-5">
+                <div class="card border-sky-400">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">Pending Applications</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="pendingMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $pending ?? 0 }}">{{ $pending ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-time-line text-2xl text-orange-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Approved Applications -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">Approved</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="approvedMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $approved ?? 0 }}">{{ $approved ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-check-line text-2xl text-green-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="grid grid-cols-1 gap-x-5 md:grid-cols-2 xl:grid-cols-5 mb-5">
+                <!-- On Progress -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">On Progress</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="onProgMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $onProgress ?? 0 }}">{{ $onProgress ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-loader-4-line text-2xl text-blue-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Finished -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">Finished</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="finishedMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $finished ?? 0 }}">{{ $finished ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-checkbox-circle-line text-2xl text-purple-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rejected Applications -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">Rejected Applications</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="rejectedMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $rejected ?? 0 }}">{{ $rejected ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-prohibited-line text-2xl text-red-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Applications -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-center">
+                            <div class="grow">
+                                <h6 class="mb-1 text-15">Total Applications</h6>
+                                <h4 class="mb-0 text-slate-800">
+                                    <span id="totalMonthly" class="counter-value text-3xl font-bold"
+                                        data-target="{{ $sum ?? 0 }}">{{ $sum ?? 0 }}</span>
+                                </h4>
+                            </div>
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
+                                    <i class="ri-functions text-2xl text-slate-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Pending Applications -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">Pending Applications</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $pending ?? 0 }}">{{ $pending ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                            <i class="ri-time-line text-2xl text-orange-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Approved Applications -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">Approved</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $approved ?? 0 }}">{{ $approved ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="ri-check-line text-2xl text-green-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- On Progress -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">On Progress</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $onProgress ?? 0 }}">{{ $onProgress ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="ri-loader-4-line text-2xl text-blue-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Finished -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">Finished</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $finished ?? 0 }}">{{ $finished ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <i class="ri-checkbox-circle-line text-2xl text-purple-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rejected Applications -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">Rejected Applications</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $rejected ?? 0 }}">{{ $rejected ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                            <i class="ri-prohibited-line text-2xl text-red-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Applications -->
-        <div class="card">
-            <div class="card-body">
-                <div class="flex items-center">
-                    <div class="grow">
-                        <h6 class="mb-1 text-15">Total Applications</h6>
-                        <h4 class="mb-0 text-slate-800">
-                            <span class="counter-value text-3xl font-bold"
-                                data-target="{{ $sum ?? 0 }}">{{ $sum ?? 0 }}</span>
-                        </h4>
-                    </div>
-                    <div class="shrink-0">
-                        <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
-                            <i class="ri-functions text-2xl text-slate-500"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -304,6 +333,65 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    $('.monthSelect').select2({
+        theme: "bootstrap-5",
+        placeholder: "Select Month",
+        minimumResultsForSearch: -1,
+        width: function() {
+            return $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ?
+                '100%' : 'style';
+        }
+    });
+    $('.yearSelect').select2({
+        theme: "bootstrap-5",
+        placeholder: "Select Year",
+        minimumResultsForSearch: -1,
+        width: function() {
+            return $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ?
+                '100%' : 'style';
+        }
+    });
+    const baseUrl = "{{ url('/process/getAppData') }}";
+    let monthSelect = document.getElementById('monthSelect');
+    let yearSelect = document.getElementById('yearSelect');
+
+    $('#monthSelect').on('change.select2', function() {
+        let month = monthSelect.value;
+        let year = yearSelect.value;
+        let url = `${baseUrl}?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`;
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                const data = result.data;
+                if (data) {
+                    document.getElementById('pendingMonthly').innerHTML = data.pending ?? '0';
+                    document.getElementById('approvedMonthly').innerHTML = data.approved ?? '0';
+                    document.getElementById('rejectedMonthly').innerHTML = data.rejected ?? '0';
+                    document.getElementById('onProgMonthly').innerHTML = data.onProgress ?? '0';
+                    document.getElementById('finishedMonthly').innerHTML = data.finished ?? '0';
+                    document.getElementById('totalMonthly').innerHTML = data.sum ?? '0';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert('Cannot load data, please try again');
+            });
+    });
+
+    $('#yearSelect').on('change.select2', function() {
+        $('#monthSelect').trigger('change.select2');
+    });
+
+    const currentMonth = new Date().getMonth() + 1; // 1-12
+    const currentYear = new Date().getFullYear();
+    
+    $('#monthSelect').val(String(currentMonth).padStart(2, '0')).trigger('change.select2');
+    $('#yearSelect').val(currentYear).trigger('change.select2');
     // Data dari PHP
     const deptLabels = JSON.parse('{!! json_encode($deptLabels ?? ["FC", "HR", "IT", "Finance"]) !!}');
     const deptData = JSON.parse('{!! json_encode($deptData ?? [12, 8, 15, 6]) !!}');

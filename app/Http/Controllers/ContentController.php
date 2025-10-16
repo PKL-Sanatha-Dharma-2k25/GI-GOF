@@ -113,7 +113,7 @@ class ContentController extends Controller
     // Monthly Trend (6 bulan terakhir)
     $monthLabels = [];
     $monthData = [];
-    for ($i = 5; $i >= 0; $i--) {
+    for ($i = 7; $i >= 0; $i--) {
         $date = now()->subMonths($i);
         $monthLabels[] = $date->format('M');
         $monthData[] = PermohonanModel::whereYear('created_at', $date->year)

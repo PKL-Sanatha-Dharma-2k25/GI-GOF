@@ -73,7 +73,7 @@
           <div
             class="absolute z-50 hidden p-4 ltr:text-left rtl:text-right bg-white rounded-md shadow-md !top-4 dropdown-menu min-w-[14rem]"
             aria-labelledby="dropdownMenuButton">
-            <h6 class="mb-2 text-sm font-normal text-slate-500">Welcome to GI Report & Repair (GIRR)</h6>
+            <h6 class="mb-2 text-sm font-normal text-slate-500">Welcome to GI-GOF</h6>
             <a href="#!" class="flex gap-3 mb-3">
               <div class="relative inline-block shrink-0">
                 <div class="rounded bg-slate-100">
