@@ -278,28 +278,47 @@ public function approve(Request $request)
 }
 
 public function getAppData(Request $request){
-    $permohonan = PermohonanModel::whereYear('permohonan_models.created_at', $request->year)
-    ->whereMonth('permohonan_models.created_at',$request->month)->get();
-    
-    $pending = $permohonan->where('status_id',1)->count();
-    $approved= $permohonan->where('status_id',2)->count();
-    $rejected = $permohonan->where('status_id',3)->count();
-    $onProg = $permohonan->where('status_id',4)->count();
-    $finished = $permohonan->where('status_id',5)->count();
 
-    $sum = $pending+$approved+$rejected+$onProg+$finished;
-    $data = [
+    $permohonan = PermohonanModel::whereYear('permohonan_models.created_at', $request->year)
+        ->whereMonth('permohonan_models.created_at', $request->month)
+        ->get();
+    
+    $pending = $permohonan->where('status_id', 1)->count();
+    $approved = $permohonan->where('status_id', 2)->count();
+    $rejected = $permohonan->where('status_id', 3)->count();
+    $onProg = $permohonan->where('status_id', 4)->count();
+    $finished = $permohonan->where('status_id', 5)->count();
+    $sum = $pending + $approved + $rejected + $onProg + $finished;
+    
+    // Data chart departments
+    $deptStats = PermohonanModel::join('pemohon_models', 'permohonan_models.pemohon_id', '=', 'pemohon_models.id')
+        ->join('master_department_models', 'pemohon_models.dept_id', '=', 'master_department_models.id')
+        ->whereYear('permohonan_models.created_at', $request->year)
+        ->whereMonth('permohonan_models.created_at', $request->month)
+        ->select('master_department_models.dept_code', DB::raw('count(*) as total'))
+        ->groupBy('master_department_models.dept_code')
+        ->get();
+    
+    $statusData = [
+        $permohonan->where('status_id', 1)->count(),
+        $permohonan->where('status_id', 2)->count(),
+        $permohonan->where('status_id', 4)->count(),
+        $permohonan->where('status_id', 5)->count(),
+        $permohonan->where('status_id', 3)->count(),
+    ];
+    
+  
+    return response()->json([
         'pending' => $pending,
         'approved' => $approved,
         'rejected' => $rejected,
         'onProgress' => $onProg,
         'finished' => $finished,
         'sum' => $sum,
-    ];
-    return response()->json([
-        'data' => $data
+        'deptLabels' => $deptStats->pluck('dept_code'),
+        'deptData' => $deptStats->pluck('total'),
+        'statusData' => $statusData,
     ]);
-   
 }
 public function reject(Request $request)
 {

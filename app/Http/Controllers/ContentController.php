@@ -91,14 +91,15 @@ class ContentController extends Controller
         ->take(5)
         ->get();
     
+    $currentMonth = now()->month();
     // By Department
     $deptStats = PermohonanModel::join('pemohon_models', 'permohonan_models.pemohon_id', '=', 'pemohon_models.id')
         ->join('master_department_models', 'pemohon_models.dept_id', '=', 'master_department_models.id')
-        ->select('master_department_models.dept_name', DB::raw('count(*) as total'))
-        ->groupBy('master_department_models.dept_name')
+        ->select('master_department_models.dept_code', DB::raw('count(*) as total'))
+        ->groupBy('master_department_models.dept_code')
         ->get();
     
-    $deptLabels = $deptStats->pluck('dept_name');
+    $deptLabels = $deptStats->pluck('dept_code');
     $deptData = $deptStats->pluck('total');
     
     // By Status
@@ -113,7 +114,7 @@ class ContentController extends Controller
     // Monthly Trend (6 bulan terakhir)
     $monthLabels = [];
     $monthData = [];
-    for ($i = 7; $i >= 0; $i--) {
+    for ($i = 11; $i >= 0; $i--) {
         $date = now()->subMonths($i);
         $monthLabels[] = $date->format('M');
         $monthData[] = PermohonanModel::whereYear('created_at', $date->year)

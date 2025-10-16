@@ -354,73 +354,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const baseUrl = "{{ url('/process/getAppData') }}";
     let monthSelect = document.getElementById('monthSelect');
     let yearSelect = document.getElementById('yearSelect');
+    let deptChart, statusChart, monthlyChart;
 
-    $('#monthSelect').on('change.select2', function() {
-        let month = monthSelect.value;
-        let year = yearSelect.value;
-        let url = `${baseUrl}?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`;
-        fetch(url, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(result => {
-                const data = result.data;
-                if (data) {
-                    document.getElementById('pendingMonthly').innerHTML = data.pending ?? '0';
-                    document.getElementById('approvedMonthly').innerHTML = data.approved ?? '0';
-                    document.getElementById('rejectedMonthly').innerHTML = data.rejected ?? '0';
-                    document.getElementById('onProgMonthly').innerHTML = data.onProgress ?? '0';
-                    document.getElementById('finishedMonthly').innerHTML = data.finished ?? '0';
-                    document.getElementById('totalMonthly').innerHTML = data.sum ?? '0';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                alert('Cannot load data, please try again');
-            });
-    });
+    const initialDeptLabels = JSON.parse('{!! json_encode($deptLabels ?? []) !!}');
+    const initialDeptData = JSON.parse('{!! json_encode($deptData ?? []) !!}');
+    const initialStatusData = JSON.parse('{!! json_encode($statusData ?? []) !!}');
+    const monthLabels = JSON.parse('{!! json_encode($monthLabels ?? []) !!}');
+    const monthData = JSON.parse('{!! json_encode($monthData ?? []) !!}');
 
-    $('#yearSelect').on('change.select2', function() {
-        $('#monthSelect').trigger('change.select2');
-    });
+    function initDeptChart(labels, data) {
+        const ctx = document.getElementById('deptChart');
+        if (!ctx) return;
 
-    const currentMonth = new Date().getMonth() + 1; // 1-12
-    const currentYear = new Date().getFullYear();
-    
-    $('#monthSelect').val(String(currentMonth).padStart(2, '0')).trigger('change.select2');
-    $('#yearSelect').val(currentYear).trigger('change.select2');
-    // Data dari PHP
-    const deptLabels = JSON.parse('{!! json_encode($deptLabels ?? ["FC", "HR", "IT", "Finance"]) !!}');
-    const deptData = JSON.parse('{!! json_encode($deptData ?? [12, 8, 15, 6]) !!}');
-    const statusData = JSON.parse('{!! json_encode($statusData ?? [15, 25, 10, 35, 5]) !!}');
-    const monthLabels = JSON.parse(
-        '{!! json_encode($monthLabels ?? ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]) !!}');
-    const monthData = JSON.parse('{!! json_encode($monthData ?? [30, 45, 38, 52, 48, 60]) !!}');
+        // Destroy chart lama jika ada
+        if (deptChart) {
+            deptChart.destroy();
+        }
 
-    // Applications by Department Chart
-    const deptCtx = document.getElementById('deptChart');
-    if (deptCtx) {
-        new Chart(deptCtx.getContext('2d'), {
+        deptChart = new Chart(ctx.getContext('2d'), {
             type: 'bar',
             data: {
-                labels: deptLabels,
+                labels: labels,
                 datasets: [{
                     label: 'Applications',
-                    data: deptData,
+                    data: data,
                     backgroundColor: [
                         'rgba(59, 130, 246, 0.8)',
                         'rgba(16, 185, 129, 0.8)',
                         'rgba(249, 115, 22, 0.8)',
-                        'rgba(168, 85, 247, 0.8)'
+                        'rgba(168, 85, 247, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                        'rgba(234, 179, 8, 0.8)'
                     ],
                     borderColor: [
                         'rgb(59, 130, 246)',
                         'rgb(16, 185, 129)',
                         'rgb(249, 115, 22)',
-                        'rgb(168, 85, 247)'
+                        'rgb(168, 85, 247)',
+                        'rgb(236, 72, 153)',
+                        'rgb(234, 179, 8)'
                     ],
                     borderWidth: 2
                 }]
@@ -435,22 +407,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 }
             }
         });
     }
 
-    // Applications by Status Chart
-    const statusCtx = document.getElementById('statusChart');
-    if (statusCtx) {
-        new Chart(statusCtx.getContext('2d'), {
+    function initStatusChart(data) {
+        const ctx = document.getElementById('statusChart');
+        if (!ctx) return;
+
+        if (statusChart) {
+            statusChart.destroy();
+        }
+
+        statusChart = new Chart(ctx.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: ['Pending', 'Approved', 'On Progress', 'Finished', 'Rejected'],
                 datasets: [{
-                    data: statusData,
+                    data: data,
                     backgroundColor: [
                         'rgba(249, 115, 22, 0.8)',
                         'rgba(16, 185, 129, 0.8)',
@@ -472,6 +452,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    initDeptChart(initialDeptLabels, initialDeptData);
+    initStatusChart(initialStatusData);
+
+    $('#monthSelect').on('change.select2', function() {
+        let month = monthSelect.value;
+        let year = yearSelect.value;
+        let url = `${baseUrl}?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`;
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data) {
+                    document.getElementById('pendingMonthly').innerHTML = data.pending ?? '0';
+                    document.getElementById('approvedMonthly').innerHTML = data.approved ?? '0';
+                    document.getElementById('rejectedMonthly').innerHTML = data.rejected ?? '0';
+                    document.getElementById('onProgMonthly').innerHTML = data.onProgress ?? '0';
+                    document.getElementById('finishedMonthly').innerHTML = data.finished ?? '0';
+                    document.getElementById('totalMonthly').innerHTML = data.sum ?? '0';
+
+                    initDeptChart(data.deptLabels, data.deptData);
+                    initStatusChart(data.statusData);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert('Cannot load data, please try again');
+            });
+    });
+
+    $('#yearSelect').on('change.select2', function() {
+        $('#monthSelect').trigger('change.select2');
+    });
+
+    const currentMonth = new Date().getMonth() + 1; // 1-12
+    const currentYear = new Date().getFullYear();
+
+    $('#monthSelect').val(String(currentMonth).padStart(2, '0')).trigger('change.select2');
+    $('#yearSelect').val(currentYear).trigger('change.select2');
 
     // Monthly Trend Chart
     const monthlyCtx = document.getElementById('monthlyChart');
