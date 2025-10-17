@@ -3,7 +3,6 @@
 <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
     <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
         <div class="grow">
-            <h5 class="text-16">Hi General Affair! &#128516; </h5>
         </div>
         <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
             <li
@@ -11,18 +10,45 @@
                 <a href="dashboardAdmin" class="text-slate-400">Dashboard</a>
             </li>
             <li class="text-slate-700">
-                <a href="show" class="text-slate-400">Available Application</a>
+                <a href="showFinished" class="text-slate-400">Finished Application</a>
             </li>
         </ul>
     </div>
 
     <div class="card mt-3">
         <div class="card-body">
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
-                    <p class="text-xs text-gray-400 mt-1">*Click on item name to <strong>print out</strong> application detail</p>
+            <div class="grid grid-cols-1 gap-x-5 md:grid-cols-4 xl:grid-cols-5 mb-5">
+                <div class="md:col-span-2">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
+                        <p class="text-xs text-gray-400 mt-1">*Click on <strong>No Application</strong> to print application</p>
+                    </div>
                 </div>
+                <select class="monthSelect" id="monthSelect">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <select class="yearSelect" id="yearSelect">
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                    <option value="2031">2031</option>
+                    <option value="2032">2032</option>
+                </select>
+            </div>
                 <div class="overflow-x-auto">
                     <table class="display w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
                         <thead>
@@ -47,60 +73,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            @foreach ($permohonans as $permohonan)
-                            <tr>
-                                <td class="text-center">
-                                    <button data-id="{{ $permohonan->id }}"
-                                        data-url="{{ url('/permohonan/'.$permohonan->id.'/detail') }}"
-                                        style=" text-decoration: underline;color: blue;"
-                                        class="ajax-modal-btn bg-white-600 text-black btn border-white-600 hover:text-custom-500 hover:bg-custom-200 hover:border-custom-500 focus:text-white focus:bg-custom-300 focus:border-custom-500 focus:ring focus:ring-custom-100 active:text-custom-500 active:bg-custom-300 active:border-custom-500 active:ring active:ring-custom-100">
-                                        {{ $permohonan->no_permohonan }}
-                                    </button>
-                                </td>
-                                <td>
-                                    <div class="flex flex-col gap-1">
-                                        @foreach ($permohonan->barang as $barang)
-                                        <div>{{ $barang->nama_barang }}</div>
-                                        @endforeach
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="flex flex-col gap-1">
-                                        @foreach ($permohonan->barang as $barang)
-                                        <div>{{ $barang->pivot->jumlah ?? '-'}} pcs</div>
-                                        @endforeach
-                                    </div>
-                                </td>
-
-                                <td class="text-center">
-                                    <span class="px-2 py-1 rounded-full text-xs 
-                                        @if($permohonan->kepentingan == 'Sangat Mendesak') bg-red-100 text-red-800
-                                        @elseif($permohonan->kepentingan == 'Mendesak') bg-orange-100 text-orange-800
-                                        @else bg-green-100 text-green-800 @endif">
-                                        {{ $permohonan->kepentingan }}
-                                    </span>
-                                </td>
-                                <td class="text-center">{{ $permohonan->jenis_permohonan->nama_jenis_permohonan }}</td>
-                                <td class="text-center">{{ $permohonan->lokasi->nama_lokasi }}</td>
-                                <td class="px-4 py-3">
-                                    {{ $permohonan->created_at ? \Carbon\Carbon::parse($permohonan->created_at)->format('Y/m/d H:i:i') : '-' }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="px-2 py-1 rounded-full text-xs  
-                    @if($permohonan->status->nama_status == 'Approved') bg-sky-100 text-sky-800
-                    @elseif($permohonan->status->nama_status == 'Pending') bg-yellow-100 text-yellow-800
-                    @elseif($permohonan->status->nama_status == 'Rejected') bg-red-100 text-red-800
-                    @elseif($permohonan->status->nama_status == 'On Progress') bg-orange-300 text-orange-800
-                    @elseif($permohonan->status->nama_status == 'Finished') bg-emerald-100 text-emerald-800
-                    @endif">
-                                        {{ $permohonan->status->nama_status ?? 'Pending' }}
-                                    </span>
-                                </td>
-                                <td class="text-center">{{ $permohonan->pemohon->username ?? '-' }}</td>
-                            </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -126,17 +98,184 @@
 </div>
 </div>
 <script>
-$('#myTable').DataTable({
-    buttons: [
-        'copy', 'pdf', 'print'
-    ],
-    language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search data..."
-    },
+    document.addEventListener('DOMContentLoaded', function() {
+
+    $('.monthSelect').select2({
+        theme: "bootstrap-5",
+        placeholder: "Select Month",
+        minimumResultsForSearch: -1,
+        width: 'style'
+    });
+    
+    $('.yearSelect').select2({
+        theme: "bootstrap-5",
+        placeholder: "Select Year",
+        minimumResultsForSearch: -1,
+        width: 'style'
+    });
+
+    const baseUrl = "{{ url('/process/getTableData') }}";
+    let monthSelect = document.getElementById('monthSelect');
+    let yearSelect = document.getElementById('yearSelect');
+
+    // Set current month and year
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    $('#monthSelect').val(String(currentMonth).padStart(2, '0')).trigger('change');
+    $('#yearSelect').val(currentYear).trigger('change');
+
+    // Initialize DataTable 
+    let table = $('#myTable').DataTable({
+        processing: true,
+        serverSide: false,
+        ajax: {
+            url: baseUrl,
+            type: 'GET',
+            data: function(d) {
+                return {
+                    month: monthSelect.value,
+                    year: yearSelect.value
+                };
+            },
+            dataSrc: '', 
+            error: function(xhr, error, code) {
+                console.error('DataTables Ajax Error:', error);
+                console.error('Status:', xhr.status);
+                console.error('Response:', xhr.responseText);
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Data',
+                    text: 'Please check your internet connection or contact administrator.',
+                });
+            }
+        },
+        columns: [
+            {
+                data: 'no_permohonan',
+                name: 'no_permohonan',
+                render: function(data, type, row) {
+                    return `<button data-id="${row.id}" 
+                                data-url="{{ url('/permohonan/') }}/${row.id}/detail"
+                                style="text-decoration: underline; color: blue;"
+                                class="ajax-modal-btn bg-white-600 text-black">
+                                ${data}
+                            </button>`;
+                }
+            },
+            {
+                data: 'barang',
+                name: 'barang',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    if (!data || data.length === 0) return '-';
+                    let html = '<div class="flex flex-col gap-1">';
+                    data.forEach(item => {
+                        html += `<div>${item.nama_barang}</div>`;
+                    });
+                    html += '</div>';
+                    return html;
+                }
+            },
+            {
+                data: 'barang',
+                name: 'item_count',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    if (!data || data.length === 0) return '-';
+                    let html = '<div class="flex flex-col gap-1">';
+                    data.forEach(item => {
+                        html += `<div>${item.jumlah || '-'} pcs</div>`;
+                    });
+                    html += '</div>';
+                    return html;
+                }
+            },
+            {
+                data: 'kepentingan',
+                name: 'kepentingan',
+                render: function(data, type, row) {
+                    let bgClass = 'bg-green-100 text-green-800';
+                    if (data === 'Sangat Mendesak') {
+                        bgClass = 'bg-red-100 text-red-800';
+                    } else if (data === 'Mendesak') {
+                        bgClass = 'bg-orange-100 text-orange-800';
+                    }
+                    return `<span class="px-2 py-1 rounded-full text-xs ${bgClass}">${data}</span>`;
+                }
+            },
+            {
+                data: 'jenis_permohonan.nama_jenis_permohonan',
+                name: 'jenis_permohonan.nama_jenis_permohonan',
+                defaultContent: '-'
+            },
+            {
+                data: 'lokasi.nama_lokasi',
+                name: 'lokasi.nama_lokasi',
+                defaultContent: '-'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at',
+                render: function(data, type, row) {
+                    if (!data) return '-';
+                    let date = new Date(data);
+                    let year = date.getFullYear();
+                    let month = String(date.getMonth() + 1).padStart(2, '0');
+                    let day = String(date.getDate()).padStart(2, '0');
+                    let hours = String(date.getHours()).padStart(2, '0');
+                    let minutes = String(date.getMinutes()).padStart(2, '0');
+                    let seconds = String(date.getSeconds()).padStart(2, '0');
+                    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+                }
+            },
+            {
+                data: 'status',
+                name: 'status.nama_status',
+                render: function(data, type, row) {
+                    if (!data) return '<span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Pending</span>';
+                    
+                    let bgClass = 'bg-yellow-100 text-yellow-800';
+                    let statusName = data.nama_status || 'Pending';
+                    
+                    if (statusName === 'Approved') {
+                        bgClass = 'bg-sky-100 text-sky-800';
+                    } else if (statusName === 'Rejected') {
+                        bgClass = 'bg-red-500 text-red-800';
+                    } else if (statusName === 'On Progress') {
+                        bgClass = 'bg-orange-300 text-orange-800';
+                    } else if (statusName === 'Finished') {
+                        bgClass = 'bg-emerald-100 text-emerald-800';
+                    }
+                    return `<span class="px-2 py-1 rounded-full text-xs ${bgClass}">${statusName}</span>`;
+                }
+            },
+            {
+                data: 'pemohon.username',
+                name: 'pemohon.username',
+                defaultContent: '-'
+            }
+        ],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search data...",
+            processing: '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
+        },
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        order: [[6, 'desc']]
+    });
+
+    // Reload table when month or year changes
+    $('#monthSelect, #yearSelect').on('change.select2', function() {
+        table.ajax.reload();
+    });
 
 
-});
+
+
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('ajax-modal-btn')) {
         let id = e.target.dataset.id;
@@ -348,112 +487,33 @@ document.addEventListener('click', function(e) {
             });
     }
 });
-
 function closeAjaxModal() {
-    toggleElementState('ModalContoh', false, 200);
-    toggleElementState('blurDiv', false, 200);
-}
-
-function previewImage(event) {
-    const file = event.target.files[0];
-    const preview = document.getElementById('preview');
-    if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.classList.remove('hidden');
-    } else {
-        preview.src = "";
-        preview.classList.add('hidden');
-    }
-}
-let openModalId = null;
-let openDrawerId = null;
-//  Show Modal
-const toggleElementState = (elementId, show, delay) => {
-    const bodyElement = document.body;
-    if (document.getElementById("backDropDiv")) {
-        var backDropOverlay = document.getElementById("backDropDiv");
-    } else {
-        var backDropOverlay = document.createElement('div');
-        backDropOverlay.className = 'fixed inset-0 bg-gray-900/20 z-[1049] backdrop-overlay hidden';
-        backDropOverlay.id = 'backDropDiv';
+        toggleElementState('ModalContoh', false, 200);
+        toggleElementState('blurDiv', false, 200);
     }
 
-    const element = document.getElementById(elementId);
-    if (element) {
-        if (!show) {
-            element.classList.add('show');
-            backDropOverlay.classList.add('hidden');
-            setTimeout(() => {
-                element.classList.add("hidden");
-            }, 350);
-        } else {
-            element.classList.remove("hidden");
-            setTimeout(() => {
-                element.classList.remove('show');
-                backDropOverlay.classList.remove('hidden');
-            }, delay);
-        }
-        bodyElement.classList.toggle('overflow-hidden', show);
-        if (show) {
-            openDrawerId = elementId;
-            openModalId = elementId;
-        } else {
-            openDrawerId = null;
-            openModalId = null;
-        }
-    }
-}
-// Close modal 
-document.addEventListener("DOMContentLoaded", function() {
-    let backDropOverlay = document.getElementById("backDropDiv");
-
-    if (backDropOverlay) {
-        backDropOverlay.addEventListener("click", function() {
-            if (openModalId) {
-                toggleElementState(openModalId, false, 200);
+    let openModalId = null;
+    
+    const toggleElementState = (elementId, show, delay) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            if (!show) {
+                element.classList.add('show');
+                setTimeout(() => {
+                    element.classList.add("hidden");
+                }, 350);
+            } else {
+                element.classList.remove("hidden");
+                setTimeout(() => {
+                    element.classList.remove('show');
+                }, delay);
             }
-        });
+            document.body.classList.toggle('overflow-hidden', show);
+            openModalId = show ? elementId : null;
+        }
     }
-
-});
-
-
-
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('image-modal')) {
-        const imageUrl = e.target.getAttribute('data-image-url');
-        showImageModal(imageUrl);
-    }
-});
-
-function showImageModal(imageUrl) {
-    const modal = document.createElement('div');
-    modal.innerHTML = `
-        <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="closeImageModal()">
-            <div class="relative max-w-4xl max-h-full p-4">
-                <img src="${imageUrl}" class="max-w-full max-h-full object-contain rounded">
-                <button onclick="closeImageModal()" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75">
-                    ×
-                </button>
-            </div>
-        </div>
-    `;
-    modal.id = 'imageModal';
-    document.body.appendChild(modal);
-}
-
-function closeImageModal() {
-    const modal = document.getElementById('imageModal');
-    if (modal) {
-        modal.remove();
-    }
-}
-// Read more functionality untuk alasan panjang
-document.querySelectorAll('.read-more').forEach(button => {
-    button.addEventListener('click', function() {
-        const fullText = this.getAttribute('data-full-text');
-        this.parentElement.innerHTML = fullText;
-    });
+    
+    window.closeAjaxModal = closeAjaxModal;
 });
 </script>
 @endsection

@@ -318,6 +318,212 @@ public function getAppData(Request $request){
         'statusData' => $statusData,
     ]);
 }
+
+public function getTableData(Request $request)
+{
+    $month = $request->input('month');
+    $year = $request->input('year');
+    $referer = $request->headers->get('referer');
+    $page = basename(parse_url($referer, PHP_URL_PATH));
+
+    if($page === 'show'){
+$data = PermohonanModel::with([
+        'barang',
+        'status',
+        'pemohon',
+        'lokasi',
+        'jenis_permohonan'
+    ])
+    ->whereYear('created_at', $year)
+    ->whereMonth('created_at', $month)
+    ->whereIn('status_id', [1])
+    ->get()
+    ->map(function($item) {
+        return [
+            'id' => $item->id,
+            'no_permohonan' => $item->no_permohonan,
+            'barang' => $item->barang->map(function($b) {
+                return [
+                    'nama_barang' => $b->nama_barang,
+                    'jumlah' => $b->pivot->jumlah ?? 0
+                ];
+            })->toArray(),
+            'kepentingan' => $item->kepentingan,
+            'jenis_permohonan' => [
+                'nama_jenis_permohonan' => $item->jenis_permohonan->nama_jenis_permohonan ?? '-'
+            ],
+            'lokasi' => [
+                'nama_lokasi' => $item->lokasi->nama_lokasi ?? '-'
+            ],
+            'created_at' => $item->created_at,
+            'status' => [
+                'nama_status' => $item->status->nama_status ?? 'Pending'
+            ],
+            'pemohon' => [
+                'username' => $item->pemohon->username ?? '-'
+            ]
+        ];
+    });
+    }
+    else if ($page === 'showApproved'){
+        $data = PermohonanModel::with([
+        'barang',
+        'status',
+        'pemohon',
+        'lokasi',
+        'jenis_permohonan'
+    ])
+    ->whereYear('created_at', $year)
+    ->whereMonth('created_at', $month)
+    ->whereIn('status_id', [2,4])
+    ->get()
+    ->map(function($item) {
+        return [
+            'id' => $item->id,
+            'no_permohonan' => $item->no_permohonan,
+            'barang' => $item->barang->map(function($b) {
+                return [
+                    'nama_barang' => $b->nama_barang,
+                    'jumlah' => $b->pivot->jumlah ?? 0
+                ];
+            })->toArray(),
+            'kepentingan' => $item->kepentingan,
+            'jenis_permohonan' => [
+                'nama_jenis_permohonan' => $item->jenis_permohonan->nama_jenis_permohonan ?? '-'
+            ],
+            'lokasi' => [
+                'nama_lokasi' => $item->lokasi->nama_lokasi ?? '-'
+            ],
+            'created_at' => $item->created_at,
+            'status' => [
+                'nama_status' => $item->status->nama_status ?? 'Pending'
+            ],
+            'pemohon' => [
+                'username' => $item->pemohon->username ?? '-'
+            ]
+        ];
+    });
+    }else if ($page === 'showFinished'){
+        $data = PermohonanModel::with([
+        'barang',
+        'status',
+        'pemohon',
+        'lokasi',
+        'jenis_permohonan'
+    ])
+    ->whereYear('created_at', $year)
+    ->whereMonth('created_at', $month)
+    ->whereIn('status_id', [5])
+    ->get()
+    ->map(function($item) {
+        return [
+            'id' => $item->id,
+            'no_permohonan' => $item->no_permohonan,
+            'barang' => $item->barang->map(function($b) {
+                return [
+                    'nama_barang' => $b->nama_barang,
+                    'jumlah' => $b->pivot->jumlah ?? 0
+                ];
+            })->toArray(),
+            'kepentingan' => $item->kepentingan,
+            'jenis_permohonan' => [
+                'nama_jenis_permohonan' => $item->jenis_permohonan->nama_jenis_permohonan ?? '-'
+            ],
+            'lokasi' => [
+                'nama_lokasi' => $item->lokasi->nama_lokasi ?? '-'
+            ],
+            'created_at' => $item->created_at,
+            'status' => [
+                'nama_status' => $item->status->nama_status ?? 'Pending'
+            ],
+            'pemohon' => [
+                'username' => $item->pemohon->username ?? '-'
+            ]
+        ];
+    });
+    }
+    else if ($page === 'showRejected'){
+        $data = PermohonanModel::with([
+        'barang',
+        'status',
+        'pemohon',
+        'lokasi',
+        'jenis_permohonan'
+    ])
+    ->whereYear('created_at', $year)
+    ->whereMonth('created_at', $month)
+    ->whereIn('status_id', [3])
+    ->get()
+    ->map(function($item) {
+        return [
+            'id' => $item->id,
+            'no_permohonan' => $item->no_permohonan,
+            'barang' => $item->barang->map(function($b) {
+                return [
+                    'nama_barang' => $b->nama_barang,
+                    'jumlah' => $b->pivot->jumlah ?? 0
+                ];
+            })->toArray(),
+            'kepentingan' => $item->kepentingan,
+            'jenis_permohonan' => [
+                'nama_jenis_permohonan' => $item->jenis_permohonan->nama_jenis_permohonan ?? '-'
+            ],
+            'lokasi' => [
+                'nama_lokasi' => $item->lokasi->nama_lokasi ?? '-'
+            ],
+            'created_at' => $item->created_at,
+            'status' => [
+                'nama_status' => $item->status->nama_status ?? 'Pending'
+            ],
+            'pemohon' => [
+                'username' => $item->pemohon->username ?? '-'
+            ]
+        ];
+    });
+    }
+    else if($page === 'showAll'){
+        $data = PermohonanModel::with([
+        'barang',
+        'status',
+        'pemohon',
+        'lokasi',
+        'jenis_permohonan'
+    ])
+    ->whereYear('created_at', $year)
+    ->whereMonth('created_at', $month)
+    ->get()
+    ->map(function($item) {
+        return [
+            'id' => $item->id,
+            'no_permohonan' => $item->no_permohonan,
+            'barang' => $item->barang->map(function($b) {
+                return [
+                    'nama_barang' => $b->nama_barang,
+                    'jumlah' => $b->pivot->jumlah ?? 0
+                ];
+            })->toArray(),
+            'kepentingan' => $item->kepentingan,
+            'jenis_permohonan' => [
+                'nama_jenis_permohonan' => $item->jenis_permohonan->nama_jenis_permohonan ?? '-'
+            ],
+            'lokasi' => [
+                'nama_lokasi' => $item->lokasi->nama_lokasi ?? '-'
+            ],
+            'created_at' => $item->created_at,
+            'status' => [
+                'nama_status' => $item->status->nama_status ?? 'Pending'
+            ],
+            'pemohon' => [
+                'username' => $item->pemohon->username ?? '-'
+            ]
+        ];
+    });
+    }
+    
+    
+    return response()->json($data);
+}
+
 public function reject(Request $request)
 {
     $rejected_at = now();

@@ -196,9 +196,9 @@
     </div>
 
     <!-- Recent Applications & Top Items -->
-    <div class="grid grid-cols-1 gap-x-5 xl:grid-cols-2 mb-5">
+    <div class="grid grid-cols-1 gap-x-5 xl:grid-cols-3 mb-5">
         <!-- Recent Applications -->
-        <div class="card">
+        <div class="card md:col-span-2">
             <div class="card-body">
                 <div class="flex items-center justify-between mb-4">
                     <h6 class="text-15 font-semibold">Recent Applications</h6>
