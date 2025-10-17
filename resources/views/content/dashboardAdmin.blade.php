@@ -172,9 +172,7 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="mb-4 text-15 font-semibold">Applications by Department</h6>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="deptChart"></canvas>
-                </div>
+                <div id="deptChart"></div>
             </div>
         </div>
 
@@ -182,10 +180,7 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="mb-4 text-15 font-semibold">Applications by Status</h6>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="statusChart"></canvas>
-                </div>
-
+                <div id="statusChart"></div>
             </div>
         </div>
     </div>
@@ -195,10 +190,7 @@
         <div class="card xl:col-span-2">
             <div class="card-body">
                 <h6 class="mb-4 text-15 font-semibold">Monthly Application Trend</h6>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
-
+                <div id="monthlyChart"></div>
             </div>
         </div>
     </div>
@@ -327,7 +319,7 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     $('.monthSelect').select2({
@@ -348,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 '100%' : 'style';
         }
     });
+    
     const baseUrl = "{{ url('/process/getAppData') }}";
     let monthSelect = document.getElementById('monthSelect');
     let yearSelect = document.getElementById('yearSelect');
@@ -359,103 +352,206 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthLabels = JSON.parse('{!! json_encode($monthLabels ?? []) !!}');
     const monthData = JSON.parse('{!! json_encode($monthData ?? []) !!}');
 
+    // Department Bar Chart
     function initDeptChart(labels, data) {
-        const ctx = document.getElementById('deptChart');
-        if (!ctx) return;
-
-        // Destroy chart lama jika ada
         if (deptChart) {
             deptChart.destroy();
         }
 
-        deptChart = new Chart(ctx.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Applications',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.8)',
-                        'rgba(16, 185, 129, 0.8)',
-                        'rgba(249, 115, 22, 0.8)',
-                        'rgba(168, 85, 247, 0.8)',
-                        'rgba(236, 72, 153, 0.8)',
-                        'rgba(234, 179, 8, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgb(59, 130, 246)',
-                        'rgb(16, 185, 129)',
-                        'rgb(249, 115, 22)',
-                        'rgb(168, 85, 247)',
-                        'rgb(236, 72, 153)',
-                        'rgb(234, 179, 8)'
-                    ],
-                    borderWidth: 2
-                }]
+        const options = {
+            series: [{
+                name: 'Applications',
+                data: data
+            }],
+            chart: {
+                type: 'bar',
+                height: 300,
+                toolbar: {
+                    show: false
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
+            plotOptions: {
+                bar: {
+                    borderRadius: 8,
+                    distributed: true,
+                    horizontal: false,
+                    columnWidth: '55%',
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            colors: [
+                '#3b82f6',
+                '#10b981',
+                '#f97316',
+                '#a855f7',
+                '#ec4899',
+                '#eab308'
+            ],
+            xaxis: {
+                categories: labels,
+                labels: {
+                    style: {
+                        fontSize: '12px'
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            legend: {
+                show: false
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " applications"
                     }
                 }
             }
-        });
+        };
+
+        deptChart = new ApexCharts(document.querySelector("#deptChart"), options);
+        deptChart.render();
     }
 
+    // Status Donut Chart
     function initStatusChart(data) {
-        const ctx = document.getElementById('statusChart');
-        if (!ctx) return;
-
         if (statusChart) {
             statusChart.destroy();
         }
 
-        statusChart = new Chart(ctx.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Approved', 'On Progress', 'Finished', 'Rejected'],
-                datasets: [{
-                    data: data,
-                    backgroundColor: [
-                        'rgba(249, 115, 22, 0.8)',
-                        'rgba(16, 185, 129, 0.8)',
-                        'rgba(59, 130, 246, 0.8)',
-                        'rgba(168, 85, 247, 0.8)',
-                        'rgba(239, 68, 68, 0.8)'
-                    ],
-                    borderWidth: 2
-                }]
+        const options = {
+            series: data,
+            chart: {
+                type: 'donut',
+                height: 300
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            labels: ['Pending', 'Approved', 'On Progress', 'Finished', 'Rejected'],
+            colors: ['#f97316', '#10b981', '#3b82f6', '#a855f7', '#ef4444'],
+            legend: {
+                position: 'bottom',
+                fontSize: '12px'
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function(val) {
+                    return Math.round(val) + "%"
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                fontSize: '16px',
+                                fontWeight: 600,
+                                formatter: function(w) {
+                                    return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " applications"
                     }
                 }
             }
-        });
+        };
+
+        statusChart = new ApexCharts(document.querySelector("#statusChart"), options);
+        statusChart.render();
     }
+
+    // Monthly Trend Line Chart
+    function initMonthlyChart(labels, data) {
+        const options = {
+            series: [{
+                name: 'Applications',
+                data: data
+            }],
+            chart: {
+                type: 'area',
+                height: 300,
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            colors: ['#3b82f6'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.1,
+                    stops: [0, 90, 100]
+                }
+            },
+            xaxis: {
+                categories: labels,
+                labels: {
+                    style: {
+                        fontSize: '11px'
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " applications"
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#f1f1f1'
+            }
+        };
+
+        monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), options);
+        monthlyChart.render();
+    }
+
+    // Initialize charts
     initDeptChart(initialDeptLabels, initialDeptData);
     initStatusChart(initialStatusData);
+    initMonthlyChart(monthLabels, monthData);
 
+    // Month/Year change handler
     $('#monthSelect').on('change.select2', function() {
         let month = monthSelect.value;
         let year = yearSelect.value;
         let url = `${baseUrl}?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`;
+        
         fetch(url, {
                 method: 'GET',
                 headers: {
@@ -464,7 +560,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-
                 if (data) {
                     document.getElementById('pendingMonthly').innerHTML = data.pending ?? '0';
                     document.getElementById('approvedMonthly').innerHTML = data.approved ?? '0';
@@ -487,45 +582,12 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#monthSelect').trigger('change.select2');
     });
 
-    const currentMonth = new Date().getMonth() + 1; // 1-12
+    // Set current month and year
+    const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
 
     $('#monthSelect').val(String(currentMonth).padStart(2, '0')).trigger('change.select2');
     $('#yearSelect').val(currentYear).trigger('change.select2');
-
-    // Monthly Trend Chart
-    const monthlyCtx = document.getElementById('monthlyChart');
-    if (monthlyCtx) {
-        new Chart(monthlyCtx.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: monthLabels,
-                datasets: [{
-                    label: 'Applications',
-                    data: monthData,
-                    borderColor: 'rgb(59, 130, 246)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
 });
 </script>
 @endsection
