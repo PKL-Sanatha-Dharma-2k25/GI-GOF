@@ -167,9 +167,6 @@
 
     </div>
 
-
-
-
     <div class="grid grid-cols-1 gap-x-5 xl:grid-cols-2 mb-5">
 
         <div class="card">

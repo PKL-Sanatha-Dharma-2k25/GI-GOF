@@ -3,7 +3,11 @@
 <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
     <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
         <div class="grow">
-            <h5 class="text-16">My Application</h5>
+            @if (session('success'))
+            <div class="p-3 mb-3 text-base text-green-500 border border-green-200 rounded-md bg-green-50">
+                {{ session('success') }}
+            </div>
+            @endif
         </div>
         <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
             <li
@@ -93,7 +97,7 @@
                                 </td>
                                 <td class="text-center">{{ $permohonan->peninjau->username ?? '-' }}</td>
                                 <td class="text-center">{{ $permohonan->catatan_peninjau ?? '-' }}</td>
-                                <td class="text-center">{{ $permohonan->est_pengerjaan ?? '-' }} <strong>Days</strong>
+                                <td class="text-center">{{ $permohonan->est_pengerjaan ?? '- ' }} <strong>Days</strong>
                                 </td>
                                 <td class="td_action text-center">
                                     <button type="button" id="deleteBtn" data-id="{{ $permohonan->id }}"
@@ -130,16 +134,13 @@
 <script>
 const deleteButtons = document.querySelectorAll('.deleteBtn');
 deleteButtons.forEach(btn => {
-
     btn.addEventListener('click', function(e) {
-       let id = e.target.dataset.id;
+        let id = e.target.dataset.id;
         let url = e.target.dataset.url;
-        
         // Tampilkan modal
         toggleElementState('ModalContoh', true, 200);
         toggleElementState('blurDiv', true, 200);
-        
-        
+
         document.querySelector('#ModalContoh .modal-body').innerHTML = `
             <form id="submit_GA_note" method="POST" action="{{ url('process/cancel') }}">
                 @csrf
@@ -167,64 +168,13 @@ deleteButtons.forEach(btn => {
                     <button 
                         type="submit" 
                         class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600">
-                        Submit Cancellation
+                        Submit
                     </button>
                 </div>
             </form>
         `;
 
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "Application will be cancelled!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Sure!',
-        //     cancelButtonText: 'Cancel'
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
 
-        //         // fetch(url, {
-        //         //         method: 'DELETE',
-        //         //         headers: {
-        //         //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //         //             'Accept': 'application/json',
-        //         //             'Content-Type': 'application/json'
-        //         //         }
-        //         //     })
-        //         //     .then(res => res.json())
-        //         //     .then(response => {
-        //         //         if (response.success) {
-        //         //             Swal.fire({
-        //         //                 icon: 'success',
-        //         //                 title: 'Done!',
-        //         //                 text: '{{ session("success") }}',
-        //         //                 timer: 2500,
-        //         //                 showConfirmButton: false
-        //         //             });
-        //         //         } else {
-        //         //             Swal.fire({
-        //         //                 icon: 'error',
-        //         //                 title: 'Failed!',
-        //         //                 text: '{{ session("error") }}',
-        //         //                 timer: 2500,
-        //         //                 showConfirmButton: false
-        //         //             });
-        //         //         }
-        //         //         location.reload();
-        //         // })
-        //     } else if (result.dismiss === Swal.DismissReason
-        //         .cancel) {
-        //         Swal.fire({
-        //             icon: 'info',
-        //             title: 'Cancelled',
-        //             text: 'Application will not be cancelled',
-        //             timer: 2500,
-        //             showConfirmButton: false
-        //         });
-        //     }
-        //     })
     });
 });
 

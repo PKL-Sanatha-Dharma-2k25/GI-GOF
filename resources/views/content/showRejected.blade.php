@@ -11,7 +11,7 @@
                 <a href="dashboardAdmin" class="text-slate-400">Dashboard</a>
             </li>
             <li class="text-slate-700">
-                <a href="show" class="text-slate-400">Available Application</a>
+                <a href="show" class="text-slate-400">Rejected Application</a>
             </li>
         </ul>
     </div>
@@ -21,10 +21,11 @@
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
-                    <p class="text-xs text-gray-400 mt-1">*Click on <strong> No Application</strong> to open application's details</p>
+                    <p class="text-xs text-gray-400 mt-1">*Click on <strong> No Application</strong> to delete
+                        application</p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="display stripe group w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
+                    <table class="display w-full text-center table-auto min-w-max" style="width:100%" id="myTable">
                         <thead>
                             <tr>
                                 <th class="text-center cursor-pointer hover:bg-gray-100">No Application</th>
@@ -52,18 +53,21 @@
                             <tr>
                                 <td class="text-center">
                                     <button data-id="{{ $permohonan->id }}"
-                                            data-url="{{ url('/permohonan/'.$permohonan->id.'/detail') }}"
-                                            style=" text-decoration: underline;color: blue;"
-                                            class="ajax-modal-btn bg-white-600 text-black btn border-white-600 hover:text-custom-500 hover:bg-custom-200 hover:border-custom-500 focus:text-white focus:bg-custom-300 focus:border-custom-500 focus:ring focus:ring-custom-100 active:text-custom-500 active:bg-custom-300 active:border-custom-500 active:ring active:ring-custom-100">
-                                            {{ $permohonan->no_permohonan }}</td>
-                                        </button>
-                                <td><div class="flex flex-col gap-1">
-                                    @foreach ($permohonan->barang as $barang)
-                                    <div>{{ $barang->nama_barang }}</div>
-                                    @endforeach
-                                </div></td>
-                                
-                                
+                                        data-url="{{ url('/permohonan/'.$permohonan->id.'/detail') }}"
+                                        style=" text-decoration: underline;color: blue;"
+                                        class="ajax-modal-btn bg-white-600 text-black btn border-white-600 hover:text-custom-500 hover:bg-custom-200 hover:border-custom-500 focus:text-white focus:bg-custom-300 focus:border-custom-500 focus:ring focus:ring-custom-100 active:text-custom-500 active:bg-custom-300 active:border-custom-500 active:ring active:ring-custom-100">
+                                        {{ $permohonan->no_permohonan }}
+                                </td>
+                                </button>
+                                <td>
+                                    <div class="flex flex-col gap-1">
+                                        @foreach ($permohonan->barang as $barang)
+                                        <div>{{ $barang->nama_barang }}</div>
+                                        @endforeach
+                                    </div>
+                                </td>
+
+
                                 <td>
                                     <div class="flex flex-col gap-1">
                                         @foreach ($permohonan->barang as $barang)
@@ -130,15 +134,7 @@ $('#myTable').DataTable({
     language: {
         search: "_INPUT_",
         searchPlaceholder: "Search data..."
-    },
-    layout: {
-        bottomEnd: {
-            paging: {
-                firstLast: false
-            }
-        }
-    },
-    lengthMenu: [10, 25, 50, 100]
+    }
 });
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('ajax-modal-btn')) {
@@ -218,17 +214,72 @@ document.addEventListener('click', function(e) {
             <!-- Foto Sebelumnya -->
             <div class="mb-3">
               <label class="block mb-2 text-base font-medium">Attachment :</label>
-              <img src="{{asset('/storage/app/public/${data.foto_sebelum}')}}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
+              <img src="{{ asset('/storage/app/public/${data.foto_sebelum}')}}" alt="Foto Item" class="w-40 h-40 object-cover border rounded-md">
             </div>
             
-            
+           <div class="mb-3 md:col-span-2">
+            <button type="button" id="deleteBtn" class="m-4 text-white bg-red-500 btn ..." 
+            style="width: 95%;background-color: red;" data-url="">Delete</button>
+            </div>
         </div>
     `;
                 document.getElementById('alasan').innerHTML = data.alasan_permohonan;
+                const deleteBtn = document.getElementById('deleteBtn');
+                deleteBtn.addEventListener('click', function() {
+                    let url = `{{ url('process') }}/${data.id}/delete`;
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Application will be deleted!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sure!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
 
-                //Approve & Reject button
-               
-
+                            fetch(url, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(res => res.json())
+                                .then(response => {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Done!',
+                                            text: '{{ session("success") }}',
+                                            timer: 2500,
+                                            showConfirmButton: false
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Failed!',
+                                            text: '{{ session("error") }}',
+                                            timer: 2500,
+                                            showConfirmButton: false
+                                        });
+                                    }
+                                    location.reload();
+                                })
+                        } else if (result.dismiss === Swal.DismissReason
+                            .cancel) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Cancelled',
+                                text: 'Application will not be deleted',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                        }
+                    })
+                })
             })
             .catch(error => {
                 console.error('Fetch error:', error);

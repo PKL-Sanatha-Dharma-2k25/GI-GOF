@@ -26,12 +26,13 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         $userId = $user->id;
         // Statistics
-    $totalApplications = PermohonanModel::where('pemohon_id', $userId)->count();
+   
     $pending = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 1)->count();
     $approved = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 2)->count();
     $onProgress = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 4)->count();
     $finished = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 5)->count();
     $rejected = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 3)->count();
+     $totalApplications = $pending+$approved+$onProgress+$finished+$rejected;
     // Recent Applications (5 terbaru)
     $recentApplications = PermohonanModel::with(['status', 'jenis_permohonan', 'lokasi', 'barang'])
         ->where('pemohon_id', $userId)
@@ -167,10 +168,9 @@ class ContentController extends Controller
          
     public function check(string $id): View
     {   
-        $query = PermohonanModel::where('pemohon_id', $id);
+        $query = PermohonanModel::where('pemohon_id', $id)->whereIn('status_id',[1,2,3,4,5]);
         
-       
-        $permohonans = $query->with(['status','lokasi','barang','jenis_permohonan','peninjau'])->paginate(10);
+        $permohonans = $query->with(['status','lokasi','barang','jenis_permohonan','peninjau'])->get();
         $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
 
@@ -191,9 +191,8 @@ class ContentController extends Controller
             'jenis_permohonan',
             'peninjau',
             'pemohon.department' // Load department juga
-        ])->get();
+        ])->whereIn('status_id',[1,2,3,4,5])->get();
 
-        
         $sessionUser= session()->get('user');
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
@@ -273,6 +272,29 @@ class ContentController extends Controller
         ];
         return view('content.showFinished',$data, compact('permohonans'));
     }
+
+    public function showRejected(): View
+    {    
+         $permohonans = PermohonanModel::whereIn('status_id', [3,6]  )->with([
+            'status',
+            'lokasi',
+            'barang',
+            'jenis_permohonan',
+            'peninjau',
+            'pemohon.department' 
+        ])->get();
+        $sessionUser= session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        
+        $data = [
+            'title' => 'Rejected Application | GI-GOF',
+            'menu' => 'Content',
+            'sub_menu' => 'Dashboard',
+            'user' => $user,
+        ];
+        return view('content.showRejected',$data, compact('permohonans'));
+    }
+
     public function printOut( $id): View
     {   
         $sessionUser= session()->get('user');

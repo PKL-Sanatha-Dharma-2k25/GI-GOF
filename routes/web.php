@@ -28,6 +28,7 @@ Route::get('/check/{id}', [\App\Http\Controllers\ContentController::class, 'chec
 Route::get('/show', [\App\Http\Controllers\ContentController::class, 'show'])->name('content.show');
 Route::get('/showApproved', [\App\Http\Controllers\ContentController::class, 'showApproved'])->name('content.showApproved');
 Route::get('/showFinished', [\App\Http\Controllers\ContentController::class, 'showFinished'])->name('content.showFinished');
+Route::get('/showRejected', [\App\Http\Controllers\ContentController::class, 'showRejected'])->name('content.showRejected');
 Route::get('/showAll', [\App\Http\Controllers\ContentController::class, 'showAll'])->name('content.showAll');
 Route::get('/print/{id}', [\App\Http\Controllers\ContentController::class, 'printOut'])->name('content.print');
 Route::get('/printISO/{id}', [\App\Http\Controllers\ContentController::class, 'printOutISO'])->name('content.printISO');
@@ -46,3 +47,4 @@ Route::delete('/process/{id}/delete', [App\Http\Controllers\ProsesController::cl
 Route::post('/process/save',[App\Http\Controllers\ProsesController::class, 'simpanPermohonan'])->name('process.simpanPermohonan');
 Route::post('/process/onProgress',[App\Http\Controllers\ProsesController::class, 'updateOnProgress'])->name('process.onProgress');
 Route::post('/process/finished',[App\Http\Controllers\ProsesController::class, 'finished'])->name('process.finished');
+Route::patch('/process/cancel',[App\Http\Controllers\ProsesController::class, 'cancelApplication'])->name('process.cancel');
