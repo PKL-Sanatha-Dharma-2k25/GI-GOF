@@ -32,7 +32,7 @@ class ContentController extends Controller
     $onProgress = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 4)->count();
     $finished = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 5)->count();
     $rejected = PermohonanModel::where('pemohon_id', $userId)->where('status_id', 3)->count();
-     $totalApplications = $pending+$approved+$onProgress+$finished+$rejected;
+    $totalApplications = $pending+$approved+$onProgress+$finished+$rejected;
     // Recent Applications (5 terbaru)
     $recentApplications = PermohonanModel::with(['status', 'jenis_permohonan', 'lokasi', 'barang'])
         ->where('pemohon_id', $userId)

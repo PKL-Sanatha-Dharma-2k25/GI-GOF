@@ -556,14 +556,6 @@ function previewImage(event) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    flatpickr("#tgl_pengajuan", {
-        theme: "material_green",
-        altInput: true,
-        altFormat: "F j, Y",
-        dateFormat: "Y-m-d",
-    });
-});
 </script>
 
 @endsection

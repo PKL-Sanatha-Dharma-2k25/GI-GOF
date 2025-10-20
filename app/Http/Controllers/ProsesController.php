@@ -29,6 +29,7 @@ class ProsesController extends Controller
 
         public function simpanPermohonan(Request $request): RedirectResponse 
 {
+    
     $user = PemohonModel::with('department')->find(session('user.id'));
     
     $request->validate([
@@ -47,9 +48,10 @@ class ProsesController extends Controller
             ->join('pemohon_models', 'permohonan_models.pemohon_id', '=', 'pemohon_models.id')
             ->where('pemohon_models.dept_id', $deptId)
             ->lockForUpdate() 
-            ->orderBy('permohonan_models.created_at', 'desc')
+            ->orderBy('permohonan_models.no_permohonan', 'desc')
             ->select('permohonan_models.*') 
             ->first();
+            //dd($lastPermohonan);
         $counter = $lastPermohonan ? 
             (int)substr($lastPermohonan->no_permohonan, -4) + 1 : 1;
         
@@ -78,11 +80,12 @@ class ProsesController extends Controller
         // Attach barang
         $barang_ids = $request->barang_id;
         $jumlah = $request->jumlah_barang;
+        $keterangan = $request->keterangan_barang;
 
         foreach ($barang_ids as $index => $barang_id) {
             $data->barang()->attach($barang_id, [
                 'jumlah' => $jumlah[$index] ?? 1,
-                'keterangan' => null,
+                'keterangan' => $keterangan[$index] ?? null,
             ]);
         }
         
@@ -315,6 +318,41 @@ public function getAppData(Request $request){
         'sum' => $sum,
         'deptLabels' => $deptStats->pluck('dept_code'),
         'deptData' => $deptStats->pluck('total'),
+        'statusData' => $statusData,
+    ]);
+}
+
+public function getAppDataUser(Request $request){
+     
+        $sessionUser= $request->session()->get('user');
+        $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
+        $userId = $user->id;
+        $permohonan = PermohonanModel::whereYear('permohonan_models.created_at', $request->year)
+        ->whereMonth('permohonan_models.created_at', $request->month)->where('pemohon_id', $userId)
+        ->get();
+        // Statistics
+   
+    $pending = $permohonan->where('status_id', 1)->count();
+    $approved = $permohonan->where('status_id', 2)->count();
+    $onProgress = $permohonan->where('status_id', 4)->count();
+    $finished = $permohonan->where('status_id', 5)->count();
+    $rejected = $permohonan->where('status_id', 3)->count();
+    $totalApplications = $pending+$approved+$onProgress+$finished+$rejected;
+
+    $statusData = [
+        $permohonan->where('status_id', 1)->count(),
+        $permohonan->where('status_id', 2)->count(),
+        $permohonan->where('status_id', 4)->count(),
+        $permohonan->where('status_id', 5)->count(),
+        $permohonan->where('status_id', 3)->count(),
+    ];
+    return response()->json([
+        'pending' => $pending,
+        'approved' => $approved,
+        'rejected' => $rejected,
+        'onProgress' => $onProgress,
+        'finished' => $finished,
+        'totalApplications' => $totalApplications,
         'statusData' => $statusData,
     ]);
 }

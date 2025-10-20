@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sign In | GI-GOF</title>
+    <title>Sign In | GI-GFRM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta content="Globalindo Report & Repair" name="description">
     <meta content="MIS Team" name="author">
@@ -125,7 +125,7 @@
                 <img src="{{ asset('public/assets/images/logo/logo-gi-transparant.png') }}" alt="Logo GI"
                     class="block mx-auto w-20 h-[70px]">
                 <div class="mt-2 text-center">
-                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GOF</h2>
+                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GFRM</h2>
                     <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Form Request and Maintenance | MIS
                         Team </p>
                 </div>

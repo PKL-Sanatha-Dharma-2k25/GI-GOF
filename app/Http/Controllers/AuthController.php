@@ -54,6 +54,7 @@ class AuthController extends Controller
     ])->onlyInput('username');
     }
     public function signUp(Request $request): RedirectResponse {
+       
        $password = $request->input('password'); 
        if (strlen($password)<6) {
     Session::flash('msgErr', 'Password minimal 6 karakter!');
@@ -94,7 +95,7 @@ class AuthController extends Controller
         $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
         $deptId = $query[0]->id;
         }
-        elseif($dept == 'ACT'){
+        elseif($dept == 'ACC'){
         $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
         $deptId = $query[0]->id;}
         elseif($dept == 'PPIC'){
@@ -105,6 +106,18 @@ class AuthController extends Controller
         $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
         $deptId = $query[0]->id;
     }
+    elseif($dept == 'IQC'){
+        $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
+        $deptId = $query[0]->id;
+    }
+    elseif($dept == 'FG'){
+        $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
+        $deptId = $query[0]->id;
+    }
+    elseif($dept == 'EXIM'){
+        $query= DepartmentModel::select('id')->where('dept_code', $dept)->get();
+        $deptId = $query[0]->id;
+    }
 
         $role = 0;// all dept = member
         if($deptId == 1){
@@ -112,7 +125,6 @@ class AuthController extends Controller
         }elseif($deptId == 2){
             $role = 1; //admin
         }
-        
         $user = PemohonModel::create([
             'fullname' => $request->fullname,
             'username' => $request->username,

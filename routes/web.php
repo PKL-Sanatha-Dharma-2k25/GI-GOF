@@ -35,6 +35,7 @@ Route::get('/printISO/{id}', [\App\Http\Controllers\ContentController::class, 'p
 
 //Route AJAX
 Route::get('/process/getAppData', [App\Http\Controllers\ProsesController::class, 'getAppData'])->name('process.getAppData');
+Route::get('/process/getAppDataUser', [App\Http\Controllers\ProsesController::class, 'getAppDataUser'])->name('process.getAppDataUser');
 Route::get('/process/getNamaBarang', [App\Http\Controllers\ProsesController::class, 'getNamaBarang'])->name('process.getNamaBarang');
 Route::get('/process/getJenisPermohonan', [App\Http\Controllers\ProsesController::class, 'getJenisPermohonan'])->name('process.getJenisPermohonan');
 Route::get('/process/getLokasiKendala', [App\Http\Controllers\ProsesController::class, 'getLokasiKendala'])->name('process.getLokasiKendala');
