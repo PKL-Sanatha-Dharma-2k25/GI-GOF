@@ -3,12 +3,12 @@
 ## About
 
 Role 0 (all dept kecuali GA ) : 
-username : Ananta 
-password : 112233
+- username : Ananta 
+- password : 112233
 
 Role 1 (Admin/GA) : 
-username : GA 
-password : 112233
+- username : GA 
+- password : 112233
 
 Template project GI berbasis laravel 12, terintegrasi dengan:
 

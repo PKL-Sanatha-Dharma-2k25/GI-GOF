@@ -285,7 +285,7 @@ document.addEventListener('click', function(e) {
         toggleElementState('blurDiv', true, 200);
         // loading
         document.querySelector('#ModalContoh .modal-body').innerHTML =
-            '<p class="text-gray-500">Loadingbg-slate-100</p>';
+            '<p class="text-gray-500">Loading...</p>';
 
         let url = e.target.dataset.url;
 

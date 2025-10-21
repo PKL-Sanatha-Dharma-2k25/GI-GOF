@@ -70,8 +70,12 @@ class ContentController extends Controller
     {
         return view ('login.login');
     }
-       public function dashboardAdmin()
+       public function dashboardAdmin(Request $request)
     {
+        $sessionUser= $request->session()->get('user');
+        if($sessionUser['role'] != 1){
+            return view('errors.404');
+        }
         // Statistics
     $pending = PermohonanModel::where('status_id', 1)->count();
     $approved = PermohonanModel::where('status_id', 2)->count();

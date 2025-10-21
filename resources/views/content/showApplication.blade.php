@@ -15,7 +15,7 @@
 
     <div class="card mt-3">
         <div class="card-body">
-            <div class="grid grid-cols-1 gap-x-5 md:grid-cols-4 xl:grid-cols-5 mb-5">
+            <div class="grid grid-cols-1 gap-x-5 gap-y-3 md:grid-cols-4 xl:grid-cols-5 mb-5">
                 <div class="md:col-span-2">
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
