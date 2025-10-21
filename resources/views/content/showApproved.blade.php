@@ -726,6 +726,18 @@ function closeImageModal() {
         modal.remove();
     }
 }
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+    } else {
+        preview.src = "";
+        preview.classList.add('hidden');
+    }
+}
 // Read more functionality untuk alasan panjang
 document.querySelectorAll('.read-more').forEach(button => {
     button.addEventListener('click', function() {

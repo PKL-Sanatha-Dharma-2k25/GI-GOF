@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="mb-3">
                         <label class="block mb-2 text-base font-medium">Attachment:</label>
-                        ${data.foto_sebelum ? `<img src="{{ asset('storage/') }}/${data.foto_sebelum}" alt="Attachment" class="w-40 h-40 object-cover border rounded-md">` : '<p class="text-gray-500">No attachment</p>'}
+                        ${data.foto_sebelum ? `<img src="{{ asset('storage/app/public') }}/${data.foto_sebelum}" alt="Attachment" class="w-40 h-40 object-cover border rounded-md">` : '<p class="text-gray-500">No attachment</p>'}
                     </div>
                     <button type="button" id="approveBtn" data-id="${data.id}" class="m-4 text-white bg-custom-500 btn">Approve Application</button>
                     <button type="button" id="rejectBtn" data-id="${data.id}" class="m-4 text-white bg-red-500 btn">Reject Application</button>
@@ -503,7 +503,28 @@ document.addEventListener('DOMContentLoaded', function() {
             openModalId = show ? elementId : null;
         }
     }
-    
+    function showImageModal(imageUrl) {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onclick="closeImageModal()">
+            <div class="relative max-w-4xl max-h-full p-4">
+                <img src="${imageUrl}" class="max-w-full max-h-full object-contain rounded">
+                <button onclick="closeImageModal()" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75">
+                    ×
+                </button>
+            </div>
+        </div>
+    `;
+    modal.id = 'imageModal';
+    document.body.appendChild(modal);
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.remove();
+    }
+}
     window.closeAjaxModal = closeAjaxModal;
 });
 </script>
