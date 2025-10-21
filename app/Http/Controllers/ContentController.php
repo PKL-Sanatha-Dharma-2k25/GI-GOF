@@ -52,7 +52,7 @@ class ContentController extends Controller
             ->count();
     }
     $data = [
-            'title' => 'Main Dashboard | GI-GOF',
+            'title' => 'Main Dashboard | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -132,7 +132,7 @@ class ContentController extends Controller
         ->take(5)
         ->get();
         $data = [
-            'title' => 'Admin Dashboard | GI-GOF',
+            'title' => 'Admin Dashboard | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard'
         ];
@@ -146,7 +146,7 @@ class ContentController extends Controller
            public function dashboardSuperAdmin()
     {
         $data = [
-            'title' => 'Super Admin Dashboard | GI-GOF',
+            'title' => 'Super Admin Dashboard | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard'
         ];
@@ -158,7 +158,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Main Dashboard | GI-GOF',
+            'title' => 'Main Dashboard | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -175,7 +175,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
 
         $data = [
-            'title' => 'Main Dashboard | GI-GOF',
+            'title' => 'Main Dashboard | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -197,7 +197,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Available Application | GI-GOF',
+            'title' => 'Available Application | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -220,7 +220,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Available Application | GI-GOF',
+            'title' => 'Available Application | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -244,7 +244,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Approved Application | GI-GOF',
+            'title' => 'Approved Application | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -265,7 +265,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Finished Application | GI-GOF',
+            'title' => 'Finished Application | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -287,7 +287,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         
         $data = [
-            'title' => 'Rejected Application | GI-GOF',
+            'title' => 'Rejected Application | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -301,7 +301,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         $permohonan = PermohonanModel::with(['barang', 'pemohon','lokasi','status'])->findOrFail($id);
         $data = [
-            'title' => 'Print Out | GI-GOF',
+            'title' => 'Print Out | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,
@@ -315,7 +315,7 @@ class ContentController extends Controller
         $user = PemohonModel::with('department')->where('id', $sessionUser['id'])->first();
         $permohonan = PermohonanModel::with(['barang', 'pemohon','lokasi','status'])->findOrFail($id);
         $data = [
-            'title' => 'Print Out ISO Form | GI-GOF',
+            'title' => 'Print Out ISO Form | GI-GFRM',
             'menu' => 'Content',
             'sub_menu' => 'Dashboard',
             'user' => $user,

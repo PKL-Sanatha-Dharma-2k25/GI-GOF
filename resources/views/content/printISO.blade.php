@@ -270,6 +270,10 @@
                     <td id="main-table">
                         <div>{!! $permohonan->alasan_permohonan ?? '-' !!} 
                             <br> <strong>Lokasi :</strong> {!!$permohonan->lokasi->nama_lokasi ?? '-' !!}
+                            <br> <strong>Keterangan :</strong>
+                             @foreach ($permohonan->barang as $barang)
+                             <div>{{ $barang->nama_barang }} &#8594; {{$barang->pivot->keterangan}}</div>
+                            @endforeach
                     </div>
                     </td>
                 </tr>

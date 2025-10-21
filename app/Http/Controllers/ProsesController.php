@@ -81,17 +81,21 @@ class ProsesController extends Controller
         $barang_ids = $request->barang_id;
         $jumlah = $request->jumlah_barang;
         $keterangan = $request->keterangan_barang;
-
+        //dd($barang_ids);
         foreach ($barang_ids as $index => $barang_id) {
-            $data->barang()->attach($barang_id, [
-                'jumlah' => $jumlah[$index] ?? 1,
-                'keterangan' => $keterangan[$index] ?? null,
-            ]);
-        }
+    $data->barang()->attach($barang_id, [
+        'jumlah' => $jumlah[$index] ?? 1,
+        'keterangan' => $keterangan[$index] ?? null,
+    ]);
+    
+    Log::info("Successfully attached barang_id: $barang_id with jumlah: {$jumlah[$index]}");
+}
+
+Log::info("Total attached: " . count($barang_ids));
         
         DB::commit(); 
         return redirect()->back()->with('success', 'Permohonan telah dibuat.');
-        
+                
     } catch (\Exception $e) {
         DB::rollBack(); // Jika error, batalkan semua perubahan
         dd($e->getMessage(), $e->getTrace());
@@ -229,7 +233,7 @@ class ProsesController extends Controller
                 return [
                     'nama_barang' => $item->nama_barang,
                     'jumlah' => $item->pivot->jumlah ?? 0,
-                    'keterangan' => $item->pivot->keterangan_barang ?? '-'
+                    'keterangan' => $item->pivot->keterangan ?? '-'
                 ];
             }),
             

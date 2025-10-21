@@ -12,7 +12,7 @@ class MasterBarangModel extends Model
     protected $fillable = ['nama_barang', 'kode_barang'];
     public function permohonan()
 {
-    return $this->belongsToMany(PermohonanModel::class, 'permohonan_barang', 'barang_id', 'permohonan_id');
+    return $this->belongsToMany(PermohonanModel::class, 'permohonan_barangs', 'barang_id', 'permohonan_id');
 }
 
 }
