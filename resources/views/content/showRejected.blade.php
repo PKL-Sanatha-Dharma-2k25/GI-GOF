@@ -22,7 +22,7 @@
                     <div>
                         <h2 class="text-lg font-semibold text-gray-800">List of Application</h2>
                         <p class="text-xs text-gray-400 mt-1">*Click on <strong>No Application</strong> to
-                            approve/reject application</p>
+                            delete application</p>
                     </div>
                 </div>
                 <select class="monthSelect" id="monthSelect">
