@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     let barangListHTML = '';
                     data.barang.forEach(item => {
                         barangListHTML += `
-                <div class="flex justify-between items-center p-2 bg-gray-500 rounded mb-2">
+                <div class="flex justify-between items-center p-2 bg-slate-100 rounded mb-2">
                     <div>
                         <span class="font-medium">${item.nama_barang}</span>
                         ${item.keterangan ? `<p class="text-xs text-gray-500">${item.keterangan}</p>` : ''}
