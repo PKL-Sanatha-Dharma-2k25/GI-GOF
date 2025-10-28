@@ -39,4 +39,3 @@
 <!-- App js -->
 <script src="{{ asset('public/assets/js/app.js') }}"></script>
 
-<!-- Datatables Bootstrap5 -->

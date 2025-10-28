@@ -10,20 +10,29 @@ Role 1 (Admin/GA) :
 - username : GA 
 - password : 112233
 
-Template project GI berbasis laravel 12, terintegrasi dengan:
+Aplikasi digitalisasi form pengadaan/perbaikan untuk department GA berbasis laravel 12, terintegrasi dengan:
 
 - DataTable
 - SweetAlert2
 - Select2
 - Tailwick Templates
+- AnimeJs
 
 ## Instalation
 
 - Clone ke local
 - Buka cmd di directory-nya
 - Run ``composer install``
-- Run ``composer require yajra/laravel-datatables-oracle ``
 - Run ``npm install``
+- Run ``npm install animejs``
 - Run ``php artisan key:generate``
 - Run ``php artisan migrate``
 - Akses langsung di http://localhost/<nama folder project> tanpa harus menggunakan ``php artisan serve``
+
+Note untuk AnimeJs: 
+- Setelah konfigurasi animasi animejs, silahkan run sesuai kondisi
+- Untuk development, Run ``npm run dev`` lalu refresh page browser
+- Untuk production : 
+- Run ``npm run build`` 
+- Move folder ``/build`` pada folder public, menuju ke root project(nama folder project) eg: ``Template-Laravel12-main``
+

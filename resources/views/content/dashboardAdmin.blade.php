@@ -568,6 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('finishedMonthly').innerHTML = data.finished ?? '0';
                     document.getElementById('totalMonthly').innerHTML = data.sum ?? '0';
 
+
                     initDeptChart(data.deptLabels, data.deptData);
                     initStatusChart(data.statusData);
                 }

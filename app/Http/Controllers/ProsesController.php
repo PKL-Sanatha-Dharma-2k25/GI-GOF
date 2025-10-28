@@ -284,9 +284,9 @@ public function approve(Request $request)
 
 public function getAppData(Request $request){
 
-    // $pendingRecord = PermohonanModel::where('status_id',1)->get()->count();
-    // $onProgRecord = PermohonanModel::where('status_id',4)->get()->count();
-    // $approvedRecord = PermohonanModel::where('status_id',2)->get()->count();
+    //  $pendingRecord = PermohonanModel::where('status_id',1)->get()->count();
+    //  $onProgRecord = PermohonanModel::where('status_id',4)->get()->count();
+    //  $approvedRecord = PermohonanModel::where('status_id',2)->get()->count();
     $permohonan = PermohonanModel::whereYear('permohonan_models.created_at', $request->year)
         ->whereMonth('permohonan_models.created_at', $request->month)
         ->get();
@@ -306,7 +306,6 @@ public function getAppData(Request $request){
         ->select('master_department_models.dept_code', DB::raw('count(*) as total'))
         ->groupBy('master_department_models.dept_code')
         ->get();
-    
     $statusData = [
         $permohonan->where('status_id', 1)->count(),
         $permohonan->where('status_id', 2)->count(),

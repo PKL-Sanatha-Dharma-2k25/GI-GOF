@@ -5,20 +5,16 @@
 <head>
 
     <meta charset="utf-8">
-    <!-- <title>QC-System | dashboard</title> -->
     <title>{{ $title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta content="Minimal Admin & Dashboard Template" name="description">
-    <meta content="Themesdesign" name="author">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('public/assets/images/logo/icon.PNG') }}">
     <link href="https://cdn.jsdelivr.net/npm/quill/dist/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/quill/dist/quill.min.js"></script>
-
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     @include('layouts.css')
 </head>
-
 <body
     class="text-base bg-body-bg text-body font-public group-data-[skin=bordered]:bg-body-bordered group-data-[skin=bordered]:dark:bg-zink-700">
 
@@ -28,9 +24,6 @@
             class="ltr:md:left-vertical-menu rtl:md:right-vertical-menu group-data-[sidebar-size=md]:ltr:md:left-vertical-menu-md group-data-[sidebar-size=md]:rtl:md:right-vertical-menu-md group-data-[sidebar-size=sm]:ltr:md:left-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:md:right-vertical-menu-sm group-data-[layout=horizontal]:ltr:left-0 group-data-[layout=horizontal]:rtl:right-0 fixed right-0 z-[1000] left-0 print:hidden group-data-[navbar=bordered]:m-4 group-data-[navbar=bordered]:[&.is-sticky]:mt-0 transition-all ease-linear duration-300 group-data-[navbar=hidden]:hidden group-data-[navbar=scroll]:absolute group/topbar group-data-[layout=horizontal]:z-[1004]">
             @include('layouts.header')
         </header>
-
-        @include('layouts.navbar')
-
 
         @php
         logger('Role:', [session('user.role')]);
@@ -97,7 +90,6 @@
     .loader-container {
         text-align: center;
     }
-
     .spinner {
         width: 60px;
         height: 60px;
@@ -132,7 +124,6 @@
     </style>
 
     <script>
-    
     document.addEventListener('click', function(e) {
         const target = e.target.closest('a, button[type="submit"]');
         if (target && !target.hasAttribute('data-no-loading')) {
@@ -148,7 +139,6 @@
             }
         }
     });
-
     window.addEventListener('load', function() {
         hideLoading();
     });
@@ -168,5 +158,4 @@
     }
     </script>
 </body>
-
 </html>

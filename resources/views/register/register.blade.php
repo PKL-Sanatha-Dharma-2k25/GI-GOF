@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ asset('public/assets/css/tailwind2.css') }}">
     <script src="{{ asset('public/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Lottie Player -->
+     @vite(['resources/js/login.js'])
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
@@ -28,7 +29,7 @@
         class="relative flex flex-col md:flex-row w-full overflow-hidden bg-gradient-to-r from-custom-900 to-custom-800">
         <!-- Left: Login Card -->
         <div
-            class="min-h-[calc(100vh_-_theme('spacing.4')_*_2)] mx-3 md:w-[28rem] lg:w-[40rem] shrink-0 px-6 md:px-8 lg:px-10 py-10 md:py-14 flex items-center justify-center m-4 bg-white rounded z-10 relative mx-3 md:mx-auto xl:mx-4 ml-3 md:ml-0">
+            class="loginCard min-h-[calc(100vh_-_theme('spacing.4')_*_2)] mx-3 md:w-[28rem] lg:w-[40rem] shrink-0 px-6 md:px-8 lg:px-10 py-10 md:py-14 flex items-center justify-center m-4 bg-white rounded z-10 relative mx-3 md:mx-auto xl:mx-4 ml-3 md:ml-0">
             <div class=" flex-col w-full h-full ">
                 <div class="my-auto">
                     <!-- <img src="{{ asset('public/assets/images/logo/gi.PNG') }}" alt="Logo GI" class="block mx-auto w-[200px] h-[40px]"> -->
@@ -262,16 +263,16 @@
         <div
             class="relative z-10 flex items-center justify-center min-h-screen px-6 md:px-8 lg:px-10 text-center grow py-10 md:py-14">
             <div>
-                <img src="{{ asset('public/assets/images/logo/logo-gi-transparant.png') }}" alt="Logo GI"
+                <img id="logo" src="{{ asset('public/assets/images/logo/logo-gi-transparant.png') }}" alt="Logo GI"
                     class="block mx-auto w-20 h-[70px]">
                 <div class="mt-2 text-center">
-                    <h2 class="mt-4 mb-3 capitalize text-custom-50">GI-GFRM</h2>
-                    <p class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Form Request and Maintenance | MIS
+                    <h2 id="info" class="mt-4 mb-3 capitalize text-custom-50">GI-GFRM</h2>
+                    <p id="infoSub" class="max-w-2xl mx-auto text-custom-300 text-base">Globalindo Intimates - General Form Request and Maintenance | MIS
                         Team </p>
                 </div>
 
                 <lottie-player src="{{ asset('public/assets/images/logo/Animation.json') }}" speed="1"
-                    style="width: 450px; height: 450px" loop autoplay direction="1" mode="normal" class="mx-auto">
+                    style="width: 450px; height: 450px" loop autoplay direction="1" mode="normal" class="anim mx-auto">
                 </lottie-player>
             </div>
         </div>

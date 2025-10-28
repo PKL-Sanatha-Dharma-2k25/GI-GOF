@@ -285,7 +285,7 @@
                     </div>
                     <div>
                         <h6 class="font-semibold mb-1">New Application</h6>
-                        <p class="text-xs text-center text-slate-100 bg-slate-600 rounded-xl">Create new request</p>
+                        <p class="text-xs text-center text-slate-100 bg-blue-600 rounded-xl">Create new request</p>
                     </div>
                 </div>
             </div>
@@ -299,7 +299,7 @@
                     </div>
                     <div>
                         <h6 class="font-semibold mb-1">My Applications</h6>
-                        <p class="text-xs text-center text-sky-100 bg-sky-600 rounded-xl">View all requests</p>
+                        <p class="text-xs text-center text-slate-100 bg-green-600 rounded-xl">View all requests</p>
                     </div>
                 </div>
             </div>
@@ -313,7 +313,7 @@
                     </div>
                     <div>
                         <h6 class="font-semibold mb-1">Help & Guide</h6>
-                        <p class="text-xs text-center text-orange-100 bg-orange-600 rounded-xl">View user guide</p>
+                        <p class="text-xs text-center text-slate-100 bg-purple-600 rounded-xl">View user guide</p>
                     </div>
                 </div>
             </div>

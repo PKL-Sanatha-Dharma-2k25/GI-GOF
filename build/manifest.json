@@ -1,0 +1,35 @@
+{
+  "_position-DJFPSJP4.js": {
+    "file": "assets/position-DJFPSJP4.js",
+    "name": "position"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-DAxbZdIn.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D5qVXB0C.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-pWRT0dv1.js",
+    "name": "login",
+    "src": "resources/js/login.js",
+    "isEntry": true,
+    "imports": [
+      "_position-DJFPSJP4.js"
+    ]
+  },
+  "resources/js/sidebar.js": {
+    "file": "assets/sidebar-CrKptRen.js",
+    "name": "sidebar",
+    "src": "resources/js/sidebar.js",
+    "isEntry": true,
+    "imports": [
+      "_position-DJFPSJP4.js"
+    ]
+  }
+}
