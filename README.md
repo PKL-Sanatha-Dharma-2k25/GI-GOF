@@ -1,4 +1,13 @@
-<p align="center"><a href="https://drive.google.com/uc?export=view&id=1JLriGGx8wtegrTS7JGopZrAdrD2mz21s" target="_blank"><img src="https://drive.google.com/uc?export=view&id=1JLriGGx8wtegrTS7JGopZrAdrD2mz21s" width="400" alt="Login Page"></a></p>
+## Screenshoot POV User
+<p align="center"><img src="public/assets/images/screenshoot/Sign In Page.png" width="400" alt="Login Page"></a></p>
+<p align="center"><img src="public/assets/images/screenshoot/Dashboard User.png" width="400" alt="Login Page"></a></p>
+<p align="center"><img src="public/assets/images/screenshoot/Dashboard User2.png" width="400" alt="Login Page"></a></p>
+<p align="center"><img src="public/assets/images/screenshoot/Dashboard User3.png" width="400" alt="Login Page"></a></p>
+<p align="center"><img src="public/assets/images/screenshoot/CheckUser.png" width="400" alt="Login Page"></a></p>
+
+## Screenshoot POV General Affairs
+<p align="center"><img src="public/assets/images/screenshoot/Dashboard GA.png" width="400" alt="Login Page"></a></p>
+<p align="center"><img src="public/assets/images/screenshoot/GA.png" width="400" alt="Login Page"></a></p>
 
 ## About
 

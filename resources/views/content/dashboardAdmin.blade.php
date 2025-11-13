@@ -177,13 +177,8 @@
         </div>
 
         <!-- Applications by Status -->
-        <div class="card">
-            <div class="card-body">
-                <h6 class="mb-4 text-15 font-semibold">Applications by Status</h6>
-                <div id="statusChart"></div>
-            </div>
-        </div>
-    </div>
+       
+        
 
     <div class="grid grid-cols-1 gap-x-5 xl:grid-cols-2 mb-5">
         <!-- Monthly Trend -->
@@ -281,7 +276,6 @@
             </div>
         </div>
     </div>
-
     <!-- Urgency Overview -->
     <div class="card mb-5">
         <div class="card-body">
@@ -318,7 +312,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
